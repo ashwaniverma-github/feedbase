@@ -11,7 +11,7 @@ export default function LoginPage() {
                 {/* Logo */}
                 <div className="mb-8 text-center">
                     <Link href="/" className="text-2xl font-bold">
-                        Feedbase
+                        Feedinbox
                     </Link>
                     <p className="mt-2 text-sm text-neutral-500">
                         Sign in to your account

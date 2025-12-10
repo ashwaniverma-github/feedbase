@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Feedbase - Feedback for Founders",
-  description: "A simple feedback widget for founders and businesses. Collect user feedback directly into your dashboard.",
+  title: "Feedinbox - Feedback for Founders",
+  description: "Collect feedback,bug reports from users in your app.",
 };
 
 export default function RootLayout({

@@ -26,7 +26,7 @@ export function Sidebar() {
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60 shadow-md">
                         <div className="h-4 w-4 rounded-sm bg-primary-foreground" />
                     </div>
-                    Feedbase
+                    Feedinbox
                 </Link>
             </div>
 

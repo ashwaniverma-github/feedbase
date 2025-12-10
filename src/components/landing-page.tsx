@@ -34,7 +34,7 @@ export default function LandingPage() {
                             "hidden transition-all duration-500 sm:inline-block",
                             isScrolled && "sm:hidden md:hidden lg:inline-block"
                         )}>
-                            Feedbase
+                            Feedinbox
                         </span>
                     </Link>
                     <div className="flex items-center gap-1.5 sm:gap-2">
@@ -118,11 +118,11 @@ export default function LandingPage() {
                                         <code className="language-html">
                                             <span className="text-neutral-400">&lt;!-- Add to &lt;body&gt; --&gt;</span>
                                             <br />
-                                            <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">src</span>=<span className="text-green-600">"https://feedbase.app/widget.js"</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
+                                            <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">src</span>=<span className="text-green-600">"https://feedinbox.com/widget.js"</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
                                             <br />
                                             <span className="text-purple-600">&lt;script&gt;</span>
                                             <br />
-                                            <span className="text-neutral-900">  feedbase.</span><span className="text-blue-600">init</span><span className="text-neutral-600">({`{`}</span>
+                                            <span className="text-neutral-900">  feedinbox.</span><span className="text-blue-600">init</span><span className="text-neutral-600">({`{`}</span>
                                             <br />
                                             <span className="text-neutral-600">    key:</span> <span className="text-green-600">"proj_123abc"</span><span className="text-neutral-600">,</span>
                                             <br />
@@ -197,7 +197,7 @@ export default function LandingPage() {
                                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">F</div>
                                 <div>
                                     <div className="font-semibold text-neutral-900">New Feedback</div>
-                                    <div className="text-xs text-neutral-500">From: Feedbase Notifier</div>
+                                    <div className="text-xs text-neutral-500">From: Feedinbox Notifier</div>
                                 </div>
                                 <div className="ml-auto text-xs text-neutral-400">Just now</div>
                             </div>
@@ -367,7 +367,7 @@ export default function LandingPage() {
             {/* Footer */}
             <footer className="border-t border-neutral-800 bg-neutral-900 py-12 text-sm text-neutral-400">
                 <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
-                    <p>© {new Date().getFullYear()} Feedbase. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Feedinbox. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-white">Terms of Service</Link>

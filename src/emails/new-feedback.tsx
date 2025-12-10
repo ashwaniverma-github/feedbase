@@ -69,7 +69,7 @@ export default function NewFeedbackEmail({
                 <Container style={container}>
                     {/* Header */}
                     <Section style={header}>
-                        <Text style={logo}>✨ Feedbase</Text>
+                        <Text style={logo}>✨ Feedinbox</Text>
                     </Section>
 
                     {/* Main Content */}
@@ -137,7 +137,7 @@ export default function NewFeedbackEmail({
                         <Text style={footerText}>
                             This email was sent by{" "}
                             <Link href={dashboardUrl} style={footerLink}>
-                                Feedbase
+                                Feedinbox
                             </Link>
                         </Text>
                         <Text style={footerText}>

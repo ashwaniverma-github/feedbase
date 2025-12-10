@@ -163,9 +163,9 @@ export default function OnboardingPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const embedCode = `<!-- Feedbase Widget -->
+    const embedCode = `<!-- Feedinbox Widget -->
 <script>
-  window.feedbaseConfig = {
+  window.feedinboxConfig = {
     projectKey: "${projectKey}",
     position: "bottom-right",
     primaryColor: "#171717"
@@ -191,7 +191,7 @@ export default function OnboardingPage() {
                             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                                 <Sparkles className="h-4 w-4 text-primary-foreground" />
                             </div>
-                            <span className="font-bold text-foreground">Feedbase</span>
+                            <span className="font-bold text-foreground">Feedinbox</span>
                         </div>
 
                         {/* Progress */}

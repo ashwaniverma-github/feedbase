@@ -80,9 +80,9 @@ export default function ProjectSettingsPage({
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const embedCode = `<!-- Feedbase Widget -->
+    const embedCode = `<!-- Feedinbox Widget -->
 <script>
-  window.feedbaseConfig = {
+  window.feedinboxConfig = {
     projectKey: '${project?.widgetKey || "pk_xxx"}'
   };
 </script>
