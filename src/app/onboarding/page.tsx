@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { CodeBlock } from "@/components/ui/code-block";
 import { getEmbedCode } from "@/lib/snippets";
+import Image from "next/image";
 
 interface OnboardingData {
     useCase: string;
@@ -187,11 +188,15 @@ export default function OnboardingPage() {
             <div className="border-b border-border bg-card/50 backdrop-blur-xl">
                 <div className="mx-auto max-w-3xl px-4 py-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                                <Sparkles className="h-4 w-4 text-primary-foreground" />
-                            </div>
-                            <span className="font-bold text-foreground">Feedinbox</span>
+                        <div className="flex items-center">
+                            <Image
+                                src="/feedinbox.png"
+                                alt="Feedinbox"
+                                width={120}
+                                height={32}
+                                className="h-8 rounded-full w-auto"
+                            />
+                            <span className="ml-2 text-lg font-bold tracking-tight">Feedinbox</span>
                         </div>
 
                         {/* Progress */}

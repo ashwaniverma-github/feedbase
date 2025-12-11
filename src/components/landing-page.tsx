@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Mail, LayoutDashboard, Copy, Check, Zap, Code2, Sparkles, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function LandingPage() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -28,7 +29,13 @@ export default function LandingPage() {
                 >
                     <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg shadow-neutral-900/20">
-                            <Sparkles className="h-4 w-4" />
+                            <Image
+                                src="/feedinbox.png"
+                                alt="Feedinbox"
+                                width={120}
+                                height={32}
+                                className="rounded-full "
+                            />
                         </div>
                         <span className={cn(
                             "hidden transition-all duration-500 sm:inline-block",

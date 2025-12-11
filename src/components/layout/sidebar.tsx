@@ -7,6 +7,7 @@ import { LayoutDashboard, FolderKanban, Settings, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import Image from "next/image";
 
 const navItems = [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -24,9 +25,15 @@ export function Sidebar() {
             <div className="flex h-16 items-center px-6 border-b border-border">
                 <Link href="/dashboard" className="flex items-center gap-3 text-lg font-bold tracking-tight text-foreground hover:opacity-90 transition-opacity">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60 shadow-md">
-                        <div className="h-4 w-4 rounded-sm bg-primary-foreground" />
+                        <Image
+                            src="/feedinbox.png"
+                            alt="Feedinbox"
+                            width={120}
+                            height={32}
+                            className="rounded-full"
+                        />
                     </div>
-                    Feedinbox
+
                 </Link>
             </div>
 

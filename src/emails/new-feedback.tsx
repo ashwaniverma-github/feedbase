@@ -10,6 +10,7 @@ import {
     Text,
     Hr,
     Button,
+    Img,
 } from "@react-email/components";
 
 interface NewFeedbackEmailProps {
@@ -69,7 +70,13 @@ export default function NewFeedbackEmail({
                 <Container style={container}>
                     {/* Header */}
                     <Section style={header}>
-                        <Text style={logo}>✨ Feedinbox</Text>
+                        <Img
+                            src="https://feedinbox.com/feedinbox.png"
+                            alt="Feedinbox"
+                            width="120"
+                            height="32"
+                            style={logo}
+                        />
                     </Section>
 
                     {/* Main Content */}
@@ -171,9 +178,6 @@ const header = {
 };
 
 const logo = {
-    color: "#ffffff",
-    fontSize: "20px",
-    fontWeight: "bold" as const,
     margin: "0",
 };
 
