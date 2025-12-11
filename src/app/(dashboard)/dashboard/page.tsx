@@ -11,6 +11,7 @@ import { LoadingPage } from "@/components/ui/loading";
 import { Badge } from "@/components/ui/badge";
 import { ProjectSelector } from "@/components/ui/project-selector";
 import { formatDate } from "@/lib/utils";
+import { OverviewGraph } from "@/components/dashboard/overview-graph";
 import { Plus, MessageSquare, Bug, Lightbulb, HelpCircle, ArrowUpRight, Inbox, CheckCircle2 } from "lucide-react";
 
 interface Analytics {
@@ -24,6 +25,7 @@ interface Analytics {
         feature: number;
         question: number;
     };
+    chartData: { date: number; label: string; count: number; general: number; bug: number; feature: number; question: number }[];
 }
 
 interface Feedback {
@@ -48,6 +50,7 @@ export default function DashboardPage() {
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
     const [analytics, setAnalytics] = useState<Analytics | null>(null);
     const [recentFeedbacks, setRecentFeedbacks] = useState<Feedback[]>([]);
+    const [dateRange, setDateRange] = useState("30d");
 
     useEffect(() => {
         fetchProjects();
@@ -55,9 +58,9 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (selectedProject) {
-            fetchDashboardData(selectedProject);
+            fetchDashboardData(selectedProject, dateRange);
         }
-    }, [selectedProject]);
+    }, [selectedProject, dateRange]);
 
     const fetchProjects = async () => {
         try {
@@ -78,11 +81,11 @@ export default function DashboardPage() {
         }
     };
 
-    const fetchDashboardData = async (projectId: string) => {
+    const fetchDashboardData = async (projectId: string, range: string) => {
         setLoading(true);
         try {
             const [analyticsRes, feedbacksRes] = await Promise.all([
-                fetch(`/api/projects/${projectId}/analytics`),
+                fetch(`/api/projects/${projectId}/analytics?range=${range}`),
                 fetch(`/api/projects/${projectId}/feedbacks?limit=5`),
             ]);
 
@@ -190,6 +193,16 @@ export default function DashboardPage() {
                             <p className="mt-2 text-3xl font-bold text-foreground">{analytics?.thisWeek || 0}</p>
                         </CardContent>
                     </Card>
+                </div>
+
+                {/* Overview Graph */}
+                <div className="mt-8">
+                    <OverviewGraph
+                        data={analytics?.chartData || []}
+                        range={dateRange}
+                        onRangeChange={setDateRange}
+                        loading={loading}
+                    />
                 </div>
 
                 {/* Recent Feedback */}

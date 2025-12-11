@@ -1,3 +1,5 @@
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+
 interface HeaderProps {
     title: string;
     description?: string;
@@ -13,7 +15,10 @@ export function Header({ title, description, action }: HeaderProps) {
                     <p className="mt-1 text-sm text-muted-foreground">{description}</p>
                 )}
             </div>
-            {action && <div>{action}</div>}
+            <div className="flex items-center gap-4">
+                <ThemeToggle />
+                {action && <div>{action}</div>}
+            </div>
         </div>
     );
 }
