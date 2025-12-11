@@ -73,8 +73,8 @@ export default function NewFeedbackEmail({
                         <Img
                             src="https://feedinbox.com/feedinbox.png"
                             alt="Feedinbox"
-                            width="12"
-                            height="12"
+                            width="16"
+                            height="16"
                             style={logo}
                         />
                     </Section>
@@ -179,6 +179,9 @@ const header = {
 
 const logo = {
     margin: "0",
+    width: "16px",
+    height: "16px",
+    borderRadius: "50%",
 };
 
 const content = {
