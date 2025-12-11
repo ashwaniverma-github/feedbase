@@ -73,8 +73,8 @@ export default function NewFeedbackEmail({
                         <Img
                             src="https://feedinbox.com/feedinbox.png"
                             alt="Feedinbox"
-                            width="120"
-                            height="32"
+                            width="12"
+                            height="12"
                             style={logo}
                         />
                     </Section>
