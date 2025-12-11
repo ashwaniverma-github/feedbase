@@ -7,7 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loading } from "@/components/ui/loading";
-import { Copy, Check, Trash2 } from "lucide-react";
+import { CodeBlock } from "@/components/ui/code-block";
+import { Copy, Check, Trash2, Code2, FileCode, Cpu } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getEmbedCode } from "@/lib/snippets";
 import type { Project } from "@/types";
 
 export default function ProjectSettingsPage({
@@ -24,6 +27,7 @@ export default function ProjectSettingsPage({
     const [name, setName] = useState("");
     const [domain, setDomain] = useState("");
     const [copied, setCopied] = useState(false);
+    const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
 
     useEffect(() => {
         fetchProject();
@@ -80,13 +84,7 @@ export default function ProjectSettingsPage({
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const embedCode = `<!-- Feedinbox Widget -->
-<script>
-  window.feedinboxConfig = {
-    projectKey: '${project?.widgetKey || "pk_xxx"}'
-  };
-</script>
-<script src="${typeof window !== "undefined" ? window.location.origin : ""}/widget.js" async></script>`;
+    // Local getEmbedCode removed coverage
 
     if (loading) {
         return (
@@ -136,32 +134,65 @@ export default function ProjectSettingsPage({
                     <CardHeader>
                         <CardTitle>Widget Installation</CardTitle>
                         <CardDescription>
-                            Copy this code and paste it before the closing &lt;/body&gt; tag
+                            Select your framework and add the code to your application
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="relative">
-                            <pre className="overflow-x-auto rounded-lg bg-neutral-100 p-4 text-sm dark:bg-neutral-900">
-                                <code>{embedCode}</code>
-                            </pre>
-                            <Button
-                                variant="secondary"
-                                size="sm"
-                                className="absolute right-2 top-2"
-                                onClick={() => copyToClipboard(embedCode)}
-                            >
-                                {copied ? (
-                                    <>
-                                        <Check className="mr-1 h-4 w-4" />
-                                        Copied
-                                    </>
-                                ) : (
-                                    <>
-                                        <Copy className="mr-1 h-4 w-4" />
-                                        Copy
-                                    </>
-                                )}
-                            </Button>
+                        <div className="space-y-4">
+                            <div className="flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+                                <button
+                                    onClick={() => setFramework("nextjs")}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                        framework === "nextjs"
+                                            ? "bg-white dark:bg-black text-foreground shadow-sm"
+                                            : "text-neutral-500 hover:text-foreground"
+                                    )}
+                                >
+                                    <Cpu className="h-4 w-4" />
+                                    Next.js
+                                </button>
+                                <button
+                                    onClick={() => setFramework("react")}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                        framework === "react"
+                                            ? "bg-white dark:bg-black text-foreground shadow-sm"
+                                            : "text-neutral-500 hover:text-foreground"
+                                    )}
+                                >
+                                    <Code2 className="h-4 w-4" />
+                                    React
+                                </button>
+                                <button
+                                    onClick={() => setFramework("html")}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                        framework === "html"
+                                            ? "bg-white dark:bg-black text-foreground shadow-sm"
+                                            : "text-neutral-500 hover:text-foreground"
+                                    )}
+                                >
+                                    <FileCode className="h-4 w-4" />
+                                    HTML
+                                </button>
+                            </div>
+
+                            <div className="relative">
+                                <CodeBlock
+                                    code={getEmbedCode(
+                                        framework,
+                                        project?.widgetKey || "pk_xxx",
+                                        typeof window !== 'undefined' ? window.location.origin : ''
+                                    )}
+                                    language={framework === "html" ? "html" : "typescript"}
+                                    filename={
+                                        framework === "nextjs" ? "app/layout.tsx" :
+                                            framework === "react" ? "App.tsx" :
+                                                "index.html"
+                                    }
+                                />
+                            </div>
                         </div>
 
                         <div className="mt-4">

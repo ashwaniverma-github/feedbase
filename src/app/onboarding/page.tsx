@@ -21,8 +21,14 @@ import {
     HelpCircle,
     Copy,
     FolderKanban,
-    Rocket
+    Rocket,
+    Code2,
+    FileCode,
+    Cpu,
+    Terminal
 } from "lucide-react";
+import { CodeBlock } from "@/components/ui/code-block";
+import { getEmbedCode } from "@/lib/snippets";
 
 interface OnboardingData {
     useCase: string;
@@ -59,6 +65,7 @@ export default function OnboardingPage() {
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
     const [projectKey, setProjectKey] = useState("");
     const [error, setError] = useState("");
 
@@ -158,20 +165,13 @@ export default function OnboardingPage() {
     };
 
     const copyCode = () => {
-        navigator.clipboard.writeText(embedCode);
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+        navigator.clipboard.writeText(getEmbedCode(framework, projectKey, origin));
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const embedCode = `<!-- Feedinbox Widget -->
-<script>
-  window.feedinboxConfig = {
-    projectKey: "${projectKey}",
-    position: "bottom-right",
-    primaryColor: "#171717"
-  };
-</script>
-<script async src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget.js"></script>`;
+    // Local getEmbedCode removed in favor of shared utility
 
     if (status === "loading") {
         return (
@@ -371,33 +371,66 @@ export default function OnboardingPage() {
                             <CardContent className="p-6 space-y-6">
                                 {/* Instructions */}
                                 <div className="space-y-4">
-                                    <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">1</span>
-                                        Copy the code below
-                                    </h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">1</span>
+                                            Choose your framework
+                                        </h3>
+                                    </div>
+
+                                    <div className="flex p-1 bg-muted rounded-lg">
+                                        <button
+                                            onClick={() => setFramework("nextjs")}
+                                            className={cn(
+                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                framework === "nextjs"
+                                                    ? "bg-background text-foreground shadow-sm"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <Cpu className="h-4 w-4" />
+                                            Next.js
+                                        </button>
+                                        <button
+                                            onClick={() => setFramework("react")}
+                                            className={cn(
+                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                framework === "react"
+                                                    ? "bg-background text-foreground shadow-sm"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <Code2 className="h-4 w-4" />
+                                            React
+                                        </button>
+                                        <button
+                                            onClick={() => setFramework("html")}
+                                            className={cn(
+                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                framework === "html"
+                                                    ? "bg-background text-foreground shadow-sm"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <FileCode className="h-4 w-4" />
+                                            HTML
+                                        </button>
+                                    </div>
 
                                     <div className="relative">
-                                        <pre className="overflow-x-auto rounded-lg bg-muted p-4 text-sm font-mono text-foreground">
-                                            <code>{embedCode}</code>
-                                        </pre>
-                                        <Button
-                                            size="sm"
-                                            variant="secondary"
-                                            className="absolute right-2 top-2"
-                                            onClick={copyCode}
-                                        >
-                                            {copied ? (
-                                                <>
-                                                    <Check className="mr-1 h-3 w-3" />
-                                                    Copied!
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Copy className="mr-1 h-3 w-3" />
-                                                    Copy
-                                                </>
+                                        <CodeBlock
+                                            code={getEmbedCode(
+                                                framework,
+                                                projectKey,
+                                                typeof window !== 'undefined' ? window.location.origin : ''
                                             )}
-                                        </Button>
+                                            language={framework === "html" ? "html" : "typescript"}
+                                            filename={
+                                                framework === "nextjs" ? "app/layout.tsx" :
+                                                    framework === "react" ? "App.tsx" :
+                                                        "index.html"
+                                            }
+                                        />
                                     </div>
                                 </div>
 
