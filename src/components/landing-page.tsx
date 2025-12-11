@@ -19,7 +19,7 @@ export default function LandingPage() {
     return (
         <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
             {/* Navbar */}
-            <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
+            <div className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
                 <nav
                     className={cn(
                         "pointer-events-auto flex h-14 items-center justify-between rounded-full border border-neutral-200/60 bg-white/70 px-4 shadow-xl shadow-neutral-200/20 backdrop-blur-xl transition-all duration-500 ease-in-out hover:bg-white/90 sm:px-6",
@@ -65,10 +65,10 @@ export default function LandingPage() {
 
             {/* Hero Section */}
             <section className="relative overflow-hidden pt-32 pb-20 sm:pt-48 sm:pb-24">
-                <div className="mx-auto max-w-6xl px-6">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6">
                     <div className="grid gap-16 lg:grid-cols-2 lg:gap-8 items-center">
                         <div className="max-w-2xl">
-                            <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-5xl md:text-6xl mb-6">
+                            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl lg:text-6xl mb-6">
                                 The fastest way to collect feedback.
                             </h1>
                             <p className="text-lg text-neutral-600 mb-8 leading-relaxed">
@@ -102,7 +102,7 @@ export default function LandingPage() {
                         </div>
 
                         {/* Code Showcase - The "Show" part */}
-                        <div className="relative group">
+                        <div className="relative group w-full max-w-full min-w-0">
                             <div className="absolute -inset-4 rounded-2xl bg-gradient-to-tr from-neutral-100 to-neutral-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
                             <div className="relative rounded-xl border border-neutral-200 bg-white shadow-2xl shadow-neutral-200/50 overflow-hidden">
                                 <div className="flex items-center gap-2 border-b border-neutral-100 bg-neutral-50/50 px-4 py-3">
@@ -118,7 +118,7 @@ export default function LandingPage() {
                                         <code className="language-html">
                                             <span className="text-neutral-400">&lt;!-- Add to &lt;body&gt; --&gt;</span>
                                             <br />
-                                            <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">src</span>=<span className="text-green-600">"https://feedinbox.com/widget.js"</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
+                                            <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">src</span>=<span className="text-green-600">"{process.env.NEXT_PUBLIC_WIDGET_URL || "http://localhost:3000/widget.js"}"</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
                                             <br />
                                             <span className="text-purple-600">&lt;script&gt;</span>
                                             <br />
@@ -143,7 +143,7 @@ export default function LandingPage() {
 
             {/* Email Direct Feature */}
             <section className="py-24 bg-neutral-50 border-y border-neutral-100" id="how-it-works">
-                <div className="mx-auto max-w-6xl px-6">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6">
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 mb-6 border border-blue-100">
                             <Zap className="h-3 w-3" />
@@ -192,7 +192,7 @@ export default function LandingPage() {
                         </div>
 
                         {/* Email Mockup */}
-                        <div className="mt-16 mx-auto max-w-lg bg-white rounded-xl border border-neutral-200 shadow-2xl p-6 rotate-1 hover:rotate-0 transition-transform duration-500">
+                        <div className="mt-16 mx-auto w-full max-w-lg bg-white rounded-xl border border-neutral-200 shadow-2xl p-6 rotate-1 hover:rotate-0 transition-transform duration-500">
                             <div className="flex items-center gap-4 mb-6 border-b border-neutral-100 pb-4">
                                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">F</div>
                                 <div>
@@ -221,7 +221,7 @@ export default function LandingPage() {
 
             {/* Dashboard Feature */}
             <section className="py-24">
-                <div className="mx-auto max-w-6xl px-6">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div className="order-2 lg:order-1">
                             <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-2 shadow-2xl shadow-neutral-200/50">
@@ -344,7 +344,7 @@ export default function LandingPage() {
                     <div className="absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/20 blur-[100px]" />
                 </div>
 
-                <div className="mx-auto max-w-3xl px-6 relative">
+                <div className="mx-auto max-w-3xl px-4 sm:px-6 relative">
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
                         Ready to start listening?
                     </h2>
@@ -366,7 +366,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="border-t border-neutral-800 bg-neutral-900 py-12 text-sm text-neutral-400">
-                <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
+                <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:px-6 sm:flex-row">
                     <p>© {new Date().getFullYear()} Feedinbox. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
