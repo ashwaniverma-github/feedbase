@@ -8,6 +8,10 @@ import Image from "next/image";
 
 export default function LandingPage() {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [currentTextIndex, setCurrentTextIndex] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    const animatedTexts = ["feedback", "bug reports", "feature requests"];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -15,6 +19,18 @@ export default function LandingPage() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setCurrentTextIndex((prev) => (prev + 1) % animatedTexts.length);
+                setIsAnimating(false);
+            }, 500);
+        }, 3000);
+
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -76,7 +92,23 @@ export default function LandingPage() {
                     <div className="grid gap-16 lg:grid-cols-2 lg:gap-8 items-center">
                         <div className="max-w-2xl">
                             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl lg:text-6xl mb-6">
-                                The fastest way to collect feedback.
+                                <span className="block">The fastest way to collect</span>
+                                <span className="block relative h-[1.2em] overflow-hidden">
+                                    <span
+                                        className={cn(
+                                            "absolute left-0 transition-all duration-500 ease-out",
+                                            isAnimating
+                                                ? "opacity-0 -translate-y-full"
+                                                : "opacity-100 translate-y-0",
+                                            currentTextIndex === 0 && "text-neutral-900",
+                                            currentTextIndex === 1 && "text-red-500",
+                                            currentTextIndex === 2 && "text-amber-500"
+                                        )}
+                                    >
+                                        {animatedTexts[currentTextIndex]}
+                                    </span>
+                                </span>
+                                <span className="block">in your app.</span>
                             </h1>
                             <p className="text-lg text-neutral-600 mb-8 leading-relaxed">
                                 Simply embed a snippet of code and start receiving bug reports, feature requests, and user thoughts directly to your mailbox and dashboard.
