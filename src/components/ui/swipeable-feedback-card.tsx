@@ -32,9 +32,6 @@ export function SwipeableFeedbackCard({
     useEffect(() => {
         if (!isFirstCard || hasPlayedDemo) return;
 
-        const hasSeen = localStorage.getItem(TUTORIAL_STORAGE_KEY);
-        if (hasSeen) return;
-
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -57,8 +54,7 @@ export function SwipeableFeedbackCard({
                                 await new Promise(r => setTimeout(r, 400));
                                 await animate(scope.current, { x: 0 }, { duration: 0.3, ease: "easeIn" });
 
-                                // Mark as seen and hide hint after demo
-                                localStorage.setItem(TUTORIAL_STORAGE_KEY, "true");
+                                // Hide hint after demo
                                 setTimeout(() => setShowHint(false), 1000);
                             } catch (e) {
                                 // Animation might fail if component unmounts

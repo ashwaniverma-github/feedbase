@@ -21,7 +21,9 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
     const containerRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
 
-    const selectedProject = projects.find(p => p.id === selectedId);
+    // Safety check for projects array
+    const safeProjects = Array.isArray(projects) ? projects : [];
+    const selectedProject = safeProjects.find(p => p.id === selectedId);
 
     // Close on outside click
     useEffect(() => {
@@ -42,15 +44,17 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
             switch (e.key) {
                 case "ArrowDown":
                     e.preventDefault();
-                    setHighlightedIndex(i => (i + 1) % projects.length);
+                    setHighlightedIndex(i => (i + 1) % safeProjects.length);
                     break;
                 case "ArrowUp":
                     e.preventDefault();
-                    setHighlightedIndex(i => (i - 1 + projects.length) % projects.length);
+                    setHighlightedIndex(i => (i - 1 + safeProjects.length) % safeProjects.length);
                     break;
                 case "Enter":
                     e.preventDefault();
-                    onSelect(projects[highlightedIndex].id);
+                    if (safeProjects[highlightedIndex]) {
+                        onSelect(safeProjects[highlightedIndex].id);
+                    }
                     setIsOpen(false);
                     break;
                 case "Escape":
@@ -61,7 +65,7 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
 
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, highlightedIndex, projects, onSelect]);
+    }, [isOpen, highlightedIndex, safeProjects, onSelect]);
 
     // Scroll highlighted item into view
     useEffect(() => {
@@ -76,10 +80,10 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
     // Reset highlighted index when opening
     useEffect(() => {
         if (isOpen) {
-            const index = projects.findIndex(p => p.id === selectedId);
+            const index = safeProjects.findIndex(p => p.id === selectedId);
             setHighlightedIndex(index >= 0 ? index : 0);
         }
-    }, [isOpen, projects, selectedId]);
+    }, [isOpen, safeProjects, selectedId]);
 
     return (
         <div ref={containerRef} className="relative">
@@ -136,7 +140,7 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
                             ref={listRef}
                             className="max-h-[280px] overflow-auto py-1 scrollbar-hide"
                         >
-                            {projects.map((project, index) => {
+                            {safeProjects.map((project, index) => {
                                 const isSelected = project.id === selectedId;
                                 const isHighlighted = index === highlightedIndex;
 

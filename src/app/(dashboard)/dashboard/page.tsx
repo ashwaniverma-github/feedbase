@@ -73,6 +73,13 @@ export default function DashboardPage() {
             const res = await fetch("/api/projects");
             const data = await res.json();
 
+            // Check if data is an array (valid response)
+            if (!Array.isArray(data)) {
+                console.error("Invalid projects response:", data);
+                setLoading(false);
+                return;
+            }
+
             // Redirect to onboarding if no projects
             if (data.length === 0) {
                 router.replace("/onboarding");
