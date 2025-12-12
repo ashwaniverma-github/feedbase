@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { LoadingPage } from "@/components/ui/loading";
 import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
+import { SwipeableFeedbackCard } from "@/components/ui/swipeable-feedback-card";
 import { formatDate } from "@/lib/utils";
-import { Settings, MessageSquare, Bug, Lightbulb, HelpCircle, Trash2, Check, User, Link as LinkIcon } from "lucide-react";
+import { Settings, MessageSquare, Bug, Lightbulb, HelpCircle } from "lucide-react";
 import type { Feedback, Project } from "@/types";
 
 interface FeedbacksResponse {
@@ -90,7 +91,6 @@ export default function ProjectDetailPage({
     };
 
     const deleteFeedback = async (feedbackId: string) => {
-        if (!confirm("Delete this feedback?")) return;
         try {
             await fetch(`/api/projects/${id}/feedbacks/${feedbackId}`, {
                 method: "DELETE",
@@ -167,51 +167,41 @@ export default function ProjectDetailPage({
                     </Card>
                 ) : (
                     <div className="space-y-3">
-                        {feedbacks.map((feedback) => (
-                            <Card key={feedback.id} className={!feedback.isRead ? "border-l-4 border-l-neutral-900 dark:border-l-white" : ""}>
-                                <CardContent className="p-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="mt-1">{getCategoryIcon(feedback.category)}</div>
-                                        <div className="flex-1">
-                                            <p className="text-sm">{feedback.message}</p>
-                                            <div className="mt-2 flex flex-wrap items-center gap-2">
-                                                <Badge>{feedback.category}</Badge>
-                                                {feedback.userEmail && (
-                                                    <span className="text-xs text-neutral-500">
-                                                        {feedback.userEmail}
+                        {feedbacks.map((feedback, index) => (
+                            <SwipeableFeedbackCard
+                                key={feedback.id}
+                                isRead={feedback.isRead}
+                                isFirstCard={index === 0}
+                                onDelete={() => deleteFeedback(feedback.id)}
+                                onMarkAsRead={() => markAsRead(feedback.id)}
+                            >
+                                <Card className={!feedback.isRead ? "border-l-4 border-l-neutral-900 dark:border-l-white" : ""}>
+                                    <CardContent className="p-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="mt-1">{getCategoryIcon(feedback.category)}</div>
+                                            <div className="flex-1">
+                                                <p className="text-sm">{feedback.message}</p>
+                                                <div className="mt-2 flex flex-wrap items-center gap-2">
+                                                    <Badge>{feedback.category}</Badge>
+                                                    {feedback.userEmail && (
+                                                        <span className="text-xs text-neutral-500">
+                                                            {feedback.userEmail}
+                                                        </span>
+                                                    )}
+                                                    <span className="text-xs text-neutral-400">
+                                                        {formatDate(feedback.createdAt)}
                                                     </span>
+                                                </div>
+                                                {feedback.pageUrl && (
+                                                    <p className="mt-1 truncate text-xs text-neutral-400">
+                                                        {feedback.pageUrl}
+                                                    </p>
                                                 )}
-                                                <span className="text-xs text-neutral-400">
-                                                    {formatDate(feedback.createdAt)}
-                                                </span>
                                             </div>
-                                            {feedback.pageUrl && (
-                                                <p className="mt-1 truncate text-xs text-neutral-400">
-                                                    {feedback.pageUrl}
-                                                </p>
-                                            )}
                                         </div>
-                                        <div className="flex gap-1">
-                                            {!feedback.isRead && (
-                                                <button
-                                                    onClick={() => markAsRead(feedback.id)}
-                                                    className="rounded p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800"
-                                                    title="Mark as read"
-                                                >
-                                                    <Check className="h-4 w-4" />
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={() => deleteFeedback(feedback.id)}
-                                                className="rounded p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950"
-                                                title="Delete"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                    </CardContent>
+                                </Card>
+                            </SwipeableFeedbackCard>
                         ))}
                     </div>
                 )}

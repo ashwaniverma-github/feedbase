@@ -54,6 +54,13 @@ model User {
   accounts      Account[]
   sessions      Session[]
   projects      Project[]
+
+  // Dodo Payments fields
+  dodoCustomerId         String?  @unique
+  dodoSubscriptionId     String?  @unique
+  dodoProductId          String?
+  dodoPlanCadence        String?  // 'monthly' | 'annual'
+  dodoSubscriptionStatus String?  // 'active' | 'on_hold' | 'cancelled' | 'failed' | 'expired'
 }
 
 model Project {

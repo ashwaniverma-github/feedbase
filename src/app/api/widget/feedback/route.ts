@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { createFeedbackSchema } from "@/lib/validations";
 import { resend, FROM_EMAIL } from "@/lib/email";
 import NewFeedbackEmail from "@/emails/new-feedback";
+import { canReceiveFeedback } from "@/lib/tiers";
 
 // POST /api/widget/feedback - Public endpoint for widget to submit feedback
 export async function POST(request: Request) {
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
             include: {
                 user: {
                     select: {
+                        id: true,
                         email: true,
                         name: true,
                     },
@@ -37,6 +39,21 @@ export async function POST(request: Request) {
         if (!project) {
             return corsResponse(
                 NextResponse.json({ error: "Invalid project key" }, { status: 404 }),
+                origin
+            );
+        }
+
+        // Check if project owner can receive more feedback this month
+        const canReceive = await canReceiveFeedback(project.userId);
+        if (!canReceive.allowed) {
+            return corsResponse(
+                NextResponse.json(
+                    {
+                        error: "This project has reached its monthly feedback limit",
+                        code: "FEEDBACK_LIMIT_REACHED",
+                    },
+                    { status: 429 }
+                ),
                 origin
             );
         }

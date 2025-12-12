@@ -5,6 +5,7 @@ import { prisma } from "./prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
+    trustHost: true,
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -15,9 +16,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         signIn: "/login",
     },
     callbacks: {
-        session({ session, user }) {
+        async session({ session, user }) {
             if (session.user) {
                 session.user.id = user.id;
+
+                // Fetch subscription status from database
+                const dbUser = await prisma.user.findUnique({
+                    where: { id: user.id },
+                }) as any;
+
+                session.user.subscriptionStatus = dbUser?.dodoSubscriptionStatus || null;
             }
             return session;
         },

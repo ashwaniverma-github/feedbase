@@ -1,10 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function LoginPage() {
+function LoginContent() {
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-white dark:bg-neutral-950">
             <div className="w-full max-w-sm px-6">
@@ -21,7 +26,7 @@ export default function LoginPage() {
                 {/* Sign in button */}
                 <div className="space-y-4">
                     <Button
-                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                        onClick={() => signIn("google", { callbackUrl })}
                         variant="secondary"
                         size="lg"
                         className="w-full gap-3"
@@ -56,3 +61,16 @@ export default function LoginPage() {
         </div>
     );
 }
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-white dark:bg-neutral-950">
+                <div className="animate-pulse text-neutral-400">Loading...</div>
+            </div>
+        }>
+            <LoginContent />
+        </Suspense>
+    );
+}
+

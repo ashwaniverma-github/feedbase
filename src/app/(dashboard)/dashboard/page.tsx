@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { LoadingPage } from "@/components/ui/loading";
 import { Badge } from "@/components/ui/badge";
 import { ProjectSelector } from "@/components/ui/project-selector";
+import { ExportDropdown } from "@/components/ui/export-dropdown";
+import { PricingModal } from "@/components/ui/pricing-modal";
+import { SwipeableFeedbackCard } from "@/components/ui/swipeable-feedback-card";
 import { formatDate } from "@/lib/utils";
 import { OverviewGraph } from "@/components/dashboard/overview-graph";
 import { Plus, MessageSquare, Bug, Lightbulb, HelpCircle, ArrowUpRight, Inbox, CheckCircle2 } from "lucide-react";
@@ -44,13 +47,16 @@ interface Project {
 
 export default function DashboardPage() {
     const router = useRouter();
-    const { status } = useSession();
+    const { data: session, status } = useSession();
     const [loading, setLoading] = useState(true);
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
     const [analytics, setAnalytics] = useState<Analytics | null>(null);
     const [recentFeedbacks, setRecentFeedbacks] = useState<Feedback[]>([]);
     const [dateRange, setDateRange] = useState("30d");
+    const [isPricingOpen, setIsPricingOpen] = useState(false);
+
+    const isPro = session?.user?.subscriptionStatus === "active";
 
     useEffect(() => {
         fetchProjects();
@@ -155,6 +161,18 @@ export default function DashboardPage() {
             />
 
             <div className="p-8">
+                {/* Header with Export */}
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-semibold text-foreground">Overview</h2>
+                    {selectedProject && (
+                        <ExportDropdown
+                            projectId={selectedProject}
+                            isPro={isPro}
+                            onUpgradeClick={() => setIsPricingOpen(true)}
+                        />
+                    )}
+                </div>
+
                 {/* Stats Grid */}
                 <div className="grid gap-4 md:grid-cols-4">
                     <Card>
@@ -228,30 +246,67 @@ export default function DashboardPage() {
                         </Card>
                     ) : (
                         <div className="space-y-2">
-                            {recentFeedbacks.map((feedback) => (
-                                <Card key={feedback.id} className="p-4 hover:shadow-md transition-shadow">
-                                    <div className="flex items-start gap-3">
-                                        <div className="mt-0.5 rounded-lg bg-muted p-2">
-                                            {getCategoryIcon(feedback.category)}
-                                        </div>
-                                        <div className="flex-1 overflow-hidden">
-                                            <p className="truncate text-sm text-foreground">{feedback.message}</p>
-                                            <div className="mt-1 flex items-center gap-2">
-                                                <Badge variant={feedback.isRead ? "secondary" : "default"}>
-                                                    {feedback.category}
-                                                </Badge>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {formatDate(feedback.createdAt)}
-                                                </span>
+                            {recentFeedbacks.map((feedback, index) => (
+                                <SwipeableFeedbackCard
+                                    key={feedback.id}
+                                    isRead={feedback.isRead}
+                                    isFirstCard={index === 0}
+                                    onDelete={async () => {
+                                        try {
+                                            const res = await fetch(`/api/projects/${selectedProject}/feedbacks/${feedback.id}`, {
+                                                method: "DELETE",
+                                            });
+                                            if (res.ok) {
+                                                setRecentFeedbacks(prev => prev.filter(f => f.id !== feedback.id));
+                                            }
+                                        } catch (error) {
+                                            console.error("Failed to delete feedback:", error);
+                                        }
+                                    }}
+                                    onMarkAsRead={async () => {
+                                        try {
+                                            const res = await fetch(`/api/projects/${selectedProject}/feedbacks/${feedback.id}`, {
+                                                method: "PATCH",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ isRead: true }),
+                                            });
+                                            if (res.ok) {
+                                                setRecentFeedbacks(prev =>
+                                                    prev.map(f => f.id === feedback.id ? { ...f, isRead: true } : f)
+                                                );
+                                            }
+                                        } catch (error) {
+                                            console.error("Failed to mark as read:", error);
+                                        }
+                                    }}
+                                >
+                                    <Card className="p-4 hover:shadow-md transition-shadow">
+                                        <div className="flex items-start gap-3">
+                                            <div className="mt-0.5 rounded-lg bg-muted p-2">
+                                                {getCategoryIcon(feedback.category)}
+                                            </div>
+                                            <div className="flex-1 overflow-hidden">
+                                                <p className="truncate text-sm text-foreground">{feedback.message}</p>
+                                                <div className="mt-1 flex items-center gap-2">
+                                                    <Badge variant={feedback.isRead ? "secondary" : "default"}>
+                                                        {feedback.category}
+                                                    </Badge>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {formatDate(feedback.createdAt)}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Card>
+                                    </Card>
+                                </SwipeableFeedbackCard>
                             ))}
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Pricing Modal */}
+            <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
         </>
     );
 }

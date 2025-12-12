@@ -27,6 +27,24 @@
 
         var POSITION = config.position || 'bottom-right';
         var PRIMARY_COLOR = config.primaryColor || '#171717';
+        var hideBranding = false; // Will be updated if project owner is Pro
+
+        // Fetch project info to check if branding should be hidden
+        fetch(API_URL + '/api/widget/project?key=' + encodeURIComponent(config.projectKey))
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (data.hideBranding) {
+                    hideBranding = true;
+                    // Hide branding footer if already rendered
+                    var footer = document.querySelector('.feedinbox-footer');
+                    if (footer) {
+                        footer.style.display = 'none';
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.warn('Feedinbox: Could not fetch project info', error);
+            });
 
         // Styles
         var posRight = POSITION.indexOf('right') !== -1;
@@ -52,6 +70,7 @@
         var closeBtn = container.querySelector('.feedinbox-close');
         var form = container.querySelector('#feedinbox-form');
         var body = container.querySelector('.feedinbox-body');
+        var footer = container.querySelector('.feedinbox-footer');
 
         var isOpen = false;
 

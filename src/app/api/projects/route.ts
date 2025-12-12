@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createProjectSchema } from "@/lib/validations";
+import { canCreateProject } from "@/lib/tiers";
 
 // GET /api/projects - List user's projects
 export async function GET() {
@@ -39,6 +40,20 @@ export async function POST(request: Request) {
 
         if (!session?.user?.id) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // Check tier limits before creating project
+        const canCreate = await canCreateProject(session.user.id);
+        if (!canCreate.allowed) {
+            return NextResponse.json(
+                {
+                    error: canCreate.reason,
+                    code: "PROJECT_LIMIT_REACHED",
+                    currentCount: canCreate.currentCount,
+                    maxAllowed: canCreate.maxAllowed,
+                },
+                { status: 403 }
+            );
         }
 
         const body = await request.json();
