@@ -13,9 +13,58 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://feedinbox.com";
+
 export const metadata: Metadata = {
-  title: "Feedinbox - Feedback for Founders",
-  description: "Collect feedback,bug reports from users in your app.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Feedinbox - Collect User Feedback in Your Inbox",
+    template: "%s | Feedinbox",
+  },
+  description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox. No complex setup required.",
+  keywords: ["feedback", "user feedback", "feedback widget", "bug reports", "feature requests", "customer feedback", "feedback tool", "saas feedback"],
+  authors: [{ name: "Feedinbox" }],
+  creator: "Feedinbox",
+  publisher: "Feedinbox",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "Feedinbox",
+    title: "Feedinbox - Collect User Feedback in Your Inbox",
+    description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox.",
+    images: [
+      {
+        url: "/OG.png",
+        width: 1200,
+        height: 630,
+        alt: "Feedinbox - Feedback for Founders",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Feedinbox - Collect User Feedback in Your Inbox",
+    description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox.",
+    images: ["/OG.png"],
+    creator: "@feedinbox",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/feedinbox.png",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
