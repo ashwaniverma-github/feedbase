@@ -162,7 +162,7 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                         "1,000 feedback submissions/month",
                                         "Unlimited data retention",
                                         "Remove Feedinbox branding",
-                                        "Custom widget colors",
+                                        "Customize widgets",
                                         "Priority email notifications",
                                         "Export to CSV/PDF"
                                     ].map((feature, i) => (

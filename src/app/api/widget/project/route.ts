@@ -2,7 +2,18 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isPro } from "@/lib/tiers";
 
-// GET /api/widget/project - Get project info for widget (includes Pro status)
+// Default widget settings
+const DEFAULT_WIDGET_SETTINGS = {
+    primaryColor: "#171717",
+    position: "bottom-right",
+    triggerIcon: "chat",
+    borderRadius: 16,
+    showEmail: true,
+    headerText: "Send Feedback",
+    hideBranding: false,
+};
+
+// GET /api/widget/project - Get project info for widget (includes Pro status and settings)
 export async function GET(request: Request) {
     try {
         const origin = request.headers.get("origin");
@@ -22,6 +33,7 @@ export async function GET(request: Request) {
                 id: true,
                 name: true,
                 userId: true,
+                settings: true,
             },
         });
 
@@ -35,11 +47,21 @@ export async function GET(request: Request) {
         // Check if project owner is Pro
         const ownerIsPro = await isPro(project.userId);
 
+        // Get widget settings (only apply custom settings for Pro users)
+        const projectSettings = (project.settings as any)?.widget || {};
+        const widgetSettings = ownerIsPro
+            ? { ...DEFAULT_WIDGET_SETTINGS, ...projectSettings }
+            : DEFAULT_WIDGET_SETTINGS;
+
+        // hideBranding only works if user is Pro AND has enabled it
+        const hideBranding = ownerIsPro && widgetSettings.hideBranding === true;
+
         return corsResponse(
             NextResponse.json({
                 projectId: project.id,
                 projectName: project.name,
-                hideBranding: ownerIsPro, // Pro users get branding hidden by default
+                hideBranding: hideBranding,
+                widget: widgetSettings,
             }),
             origin
         );

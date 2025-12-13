@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
 import { SwipeableFeedbackCard } from "@/components/ui/swipeable-feedback-card";
 import { formatDate } from "@/lib/utils";
-import { Settings, MessageSquare, Bug, Lightbulb, HelpCircle } from "lucide-react";
+import { Settings, MessageSquare, Bug, Lightbulb, HelpCircle, Palette } from "lucide-react";
 import type { Feedback, Project } from "@/types";
 
 interface FeedbacksResponse {
@@ -123,12 +123,20 @@ export default function ProjectDetailPage({
             <Header
                 title={project?.name || "Project"}
                 action={
-                    <Link href={`/projects/${id}/settings`}>
-                        <Button variant="secondary">
-                            <Settings className="mr-2 h-4 w-4" />
-                            Settings
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link href={`/projects/${id}/widget`}>
+                            <Button variant="secondary">
+                                <Palette className="mr-2 h-4 w-4" />
+                                Widget
+                            </Button>
+                        </Link>
+                        <Link href={`/projects/${id}/settings`}>
+                            <Button variant="secondary">
+                                <Settings className="mr-2 h-4 w-4" />
+                                Settings
+                            </Button>
+                        </Link>
+                    </div>
                 }
             />
 
