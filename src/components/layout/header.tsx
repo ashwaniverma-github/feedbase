@@ -18,7 +18,7 @@ export function Header({ title, description, action }: HeaderProps) {
             <div className="flex items-center gap-3">
                 <MobileMenuButton onClick={onToggle} />
                 <div>
-                    <h1 className="text-xl md:text-2xl mr-6 font-bold tracking-tight text-foreground">{title}</h1>
+                    <h1 className="text-xl md:text-2xl mr-2 font-bold tracking-tight text-foreground">{title}</h1>
                     {description && (
                         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
                     )}
