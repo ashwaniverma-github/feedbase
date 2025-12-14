@@ -101,7 +101,7 @@ export default function ProjectSettingsPage({
         <>
             <Header title="Project Settings" description={project?.name} />
 
-            <div className="mx-auto max-w-2xl space-y-6 p-8">
+            <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-8">
                 {/* General Settings */}
                 <Card>
                     <CardHeader>

@@ -167,7 +167,7 @@ export default function DashboardPage() {
                 }
             />
 
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 {/* Header with Export */}
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-lg font-semibold text-foreground">Overview</h2>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid gap-4 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-4">
                     <Card>
                         <CardContent className="p-6">
                             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">

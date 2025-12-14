@@ -144,36 +144,38 @@ export default function WidgetEditorPage({
             <Header
                 title="Widget Editor"
                 action={
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 sm:gap-3">
                         {saved && (
                             <span className="flex items-center gap-1.5 text-sm text-green-600 font-medium">
                                 <Check className="w-4 h-4" />
-                                Saved!
+                                <span className="hidden sm:inline">Saved!</span>
                             </span>
                         )}
                         {hasChanges && (
-                            <Button variant="ghost" size="sm" onClick={resetSettings}>
-                                <RotateCcw className="w-4 h-4 mr-2" />
-                                Reset
+                            <Button variant="ghost" size="sm" onClick={resetSettings} className="px-2 sm:px-3">
+                                <RotateCcw className="w-4 h-4 sm:mr-2" />
+                                <span className="hidden sm:inline">Reset</span>
                             </Button>
                         )}
                         <Button
                             size="sm"
                             onClick={saveSettings}
                             disabled={!hasChanges || saving}
+                            className="px-2 sm:px-3"
                         >
                             {saving ? (
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin sm:mr-2" />
                             ) : (
                                 <Save className="w-4 h-4 mr-2" />
                             )}
-                            {isPro ? "Save Changes" : "Upgrade to Save"}
+                            <span className="hidden sm:inline">{isPro ? "Save Changes" : "Upgrade to Save"}</span>
+                            <span className="sm:hidden">{isPro ? "Save" : "Upgrade"}</span>
                         </Button>
                     </div>
                 }
             />
 
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 {/* Pro Banner */}
                 {!isPro && (
                     <Card className="mb-6 border-primary/50 bg-primary/5">
@@ -185,7 +187,8 @@ export default function WidgetEditorPage({
                                 </p>
                             </div>
                             <Button size="sm" onClick={() => setIsPricingOpen(true)}>
-                                Upgrade to Pro
+                                <span className="sm:hidden">Upgrade</span>
+                                <span className="hidden sm:inline">Upgrade to Pro</span>
                             </Button>
                         </CardContent>
                     </Card>
@@ -198,7 +201,7 @@ export default function WidgetEditorPage({
                         <Card>
                             <CardContent className="p-6">
                                 <h3 className="font-semibold mb-4">Primary Color</h3>
-                                <div className="grid grid-cols-8 gap-2">
+                                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
                                     {PRESET_COLORS.map(color => (
                                         <button
                                             key={color}

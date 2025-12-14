@@ -123,26 +123,26 @@ export default function ProjectDetailPage({
             <Header
                 title={project?.name || "Project"}
                 action={
-                    <div className="flex gap-2">
+                    <div className="flex gap-1 sm:gap-2">
                         <Link href={`/projects/${id}/widget`}>
-                            <Button variant="secondary">
-                                <Palette className="mr-2 h-4 w-4" />
-                                Widget
+                            <Button variant="secondary" size="sm" className="px-2 sm:px-3">
+                                <Palette className="h-4 w-4 sm:mr-2" />
+                                <span className="hidden sm:inline">Widget</span>
                             </Button>
                         </Link>
                         <Link href={`/projects/${id}/settings`}>
-                            <Button variant="secondary">
-                                <Settings className="mr-2 h-4 w-4" />
-                                Settings
+                            <Button variant="secondary" size="sm" className="px-2 sm:px-3">
+                                <Settings className="h-4 w-4 sm:mr-2" />
+                                <span className="hidden sm:inline">Settings</span>
                             </Button>
                         </Link>
                     </div>
                 }
             />
 
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 {/* Filters */}
-                <div className="mb-6 flex gap-4">
+                <div className="mb-6 flex flex-col sm:flex-row gap-2 sm:gap-4">
                     <Select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
