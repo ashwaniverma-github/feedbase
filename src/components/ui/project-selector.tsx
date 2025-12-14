@@ -91,7 +91,7 @@ export function ProjectSelector({ projects, selectedId, onSelect }: ProjectSelec
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "flex items-center gap-3 h-10 pl-3 pr-2 rounded-xl border transition-all duration-200",
+                    "flex items-center gap-2 h-10 p-1 rounded-xl border transition-all duration-200",
                     "bg-card hover:bg-accent",
                     isOpen
                         ? "border-primary ring-2 ring-primary/20"

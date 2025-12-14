@@ -2,13 +2,12 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState, useRef } from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -41,43 +40,33 @@ export function ThemeToggle() {
         }
     };
 
+    // Toggle between light and dark
+    const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const newTheme = theme === "dark" ? "light" : "dark";
+        handleThemeChange(newTheme, event);
+    };
+
     if (!mounted) {
         return (
-            <div className="flex items-center gap-1 rounded-full bg-white/5 p-1 ring-1 ring-white/10">
-                <div className="h-7 w-7 animate-pulse rounded-full bg-white/10" />
-                <div className="h-7 w-7 animate-pulse rounded-full bg-white/10" />
-                <div className="h-7 w-7 animate-pulse rounded-full bg-white/10" />
-            </div>
+            <button className="flex h-9 w-9 items-center justify-center rounded-full bg-muted ring-1 ring-border">
+                <div className="h-4 w-4 animate-pulse rounded-full bg-muted-foreground/20" />
+            </button>
         );
     }
 
-    const modes = [
-        { value: "light", icon: Sun, label: "Light" },
-        { value: "dark", icon: Moon, label: "Dark" },
-        { value: "system", icon: Monitor, label: "System" },
-    ];
-
     return (
-        <div ref={containerRef} className="flex items-center gap-1 rounded-full bg-muted p-1 ring-1 ring-border">
-            {modes.map((mode) => (
-                <button
-                    key={mode.value}
-                    onClick={(e) => handleThemeChange(mode.value, e)}
-                    className={cn(
-                        "relative flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300",
-                        theme === mode.value
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10"
-                    )}
-                    title={mode.label}
-                >
-                    <mode.icon className="h-4 w-4" />
-                    {theme === mode.value && (
-                        <span className="absolute inset-0 rounded-full ring-2 ring-primary/20 animate-in zoom-in-50 duration-200" />
-                    )}
-                </button>
-            ))}
-        </div>
+        <button
+            ref={containerRef as React.RefObject<HTMLButtonElement>}
+            onClick={toggleTheme}
+            className="relative flex h-9 w-9 items-center justify-center rounded-full bg-muted ring-1 ring-border text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10 transition-all duration-300"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+            {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+            ) : (
+                <Moon className="h-4 w-4" />
+            )}
+        </button>
     );
 }
 

@@ -71,7 +71,7 @@ const GraphSkeleton = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-[250px] md:h-[300px] w-full flex items-end justify-around gap-2 px-4 pb-8"
+            className="h-[300px] w-full flex items-end justify-around gap-2 px-4 pb-8"
         >
             {[...Array(12)].map((_, i) => (
                 <motion.div
@@ -145,20 +145,20 @@ export function OverviewGraph({ data, range, onRangeChange, loading = false }: O
 
     return (
         <Card className="col-span-4">
-            <CardHeader className="pb-2 md:pb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <CardTitle className="text-base md:text-lg">Feedback Overview</CardTitle>
-                    <Tabs value={range} onValueChange={onRangeChange} className="w-full sm:w-auto">
-                        <TabsList className="grid w-full grid-cols-3 sm:w-[280px] md:w-[320px]">
-                            <TabsTrigger value="today" disabled={loading} className="text-xs md:text-sm">Today</TabsTrigger>
-                            <TabsTrigger value="7d" disabled={loading} className="text-xs md:text-sm">7 Days</TabsTrigger>
-                            <TabsTrigger value="30d" disabled={loading} className="text-xs md:text-sm">30 Days</TabsTrigger>
+            <CardHeader>
+                <div className="flex items-center justify-between">
+                    <CardTitle>Feedback Overview</CardTitle>
+                    <Tabs value={range} onValueChange={onRangeChange} className="w-[400px]">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="today" disabled={loading}>Today</TabsTrigger>
+                            <TabsTrigger value="7d" disabled={loading}>7 Days</TabsTrigger>
+                            <TabsTrigger value="30d" disabled={loading}>30 Days</TabsTrigger>
                         </TabsList>
                     </Tabs>
                 </div>
             </CardHeader>
-            <CardContent className="pl-0 md:pl-2">
-                <div className="h-[250px] md:h-[300px] w-full relative">
+            <CardContent className="pl-2">
+                <div className="h-[300px] w-full relative">
                     <AnimatePresence mode="wait">
                         {loading ? (
                             <GraphSkeleton key="skeleton" />
