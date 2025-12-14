@@ -149,8 +149,8 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
             animate={isMobile ? "expanded" : (isCollapsed ? "collapsed" : "expanded")}
             variants={isMobile ? undefined : sidebarVariants}
             className={cn(
-                "flex h-screen flex-col border-r border-border bg-card/80 backdrop-blur-xl overflow-hidden",
-                isMobile ? "w-72" : ""
+                "flex h-screen flex-col border-r border-border bg-card/80 backdrop-blur-xl",
+                isMobile ? "w-72 overflow-y-auto" : "overflow-hidden"
             )}
         >
             {/* Logo */}
