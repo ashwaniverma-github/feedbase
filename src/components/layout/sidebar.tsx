@@ -149,8 +149,8 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
             animate={isMobile ? "expanded" : (isCollapsed ? "collapsed" : "expanded")}
             variants={isMobile ? undefined : sidebarVariants}
             className={cn(
-                "flex h-screen flex-col border-r border-border bg-card/80 backdrop-blur-xl",
-                isMobile ? "w-72 overflow-y-auto" : "overflow-hidden"
+                "flex flex-col border-r border-border bg-card/80 backdrop-blur-xl",
+                isMobile ? "h-full w-72 overflow-y-auto" : "h-screen overflow-hidden"
             )}
         >
             {/* Logo */}
@@ -199,7 +199,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 space-y-1 p-4">
+            <nav className="flex-1 min-h-0 space-y-1 p-4 overflow-y-auto">
                 <AnimatePresence mode="wait">
                     {(isMobile || !isCollapsed) && (
                         <motion.div
