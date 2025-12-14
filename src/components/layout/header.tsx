@@ -24,7 +24,7 @@ export function Header({ title, description, action }: HeaderProps) {
                     )}
                 </div>
             </div>
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-1 md:gap-4">
                 <ThemeToggle />
                 {action && <div>{action}</div>}
             </div>
