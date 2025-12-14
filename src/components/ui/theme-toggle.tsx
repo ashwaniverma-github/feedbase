@@ -58,7 +58,7 @@ export function ThemeToggle() {
         <button
             ref={containerRef as React.RefObject<HTMLButtonElement>}
             onClick={toggleTheme}
-            className="relative flex h-9 w-9 items-center justify-center rounded-full bg-muted ring-1 ring-border text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10 transition-all duration-300"
+            className="relative flex h-6 w-6 items-center justify-center rounded-full bg-muted ring-1 ring-border text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10 transition-all duration-300"
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
             {theme === "dark" ? (
