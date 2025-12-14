@@ -18,12 +18,12 @@ export default function DashboardLayout({
                 isOpen={isMobileMenuOpen}
                 onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-                <div className="flex h-screen bg-background text-foreground transition-colors duration-300">
+                <div className="flex h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
                     <Sidebar
                         isMobileOpen={isMobileMenuOpen}
                         onMobileClose={() => setIsMobileMenuOpen(false)}
                     />
-                    <main className="flex-1 overflow-auto">{children}</main>
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
                 </div>
             </MobileMenuProvider>
         </SessionProvider>
