@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, FolderKanban, Settings, LogOut, ChevronRight, Menu, X } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { LayoutDashboard, FolderKanban, Settings, ChevronRight, Menu, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Avatar } from "@/components/ui/avatar";
 import { PricingModal } from "@/components/ui/pricing-modal";
 import Image from "next/image";
@@ -376,26 +376,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
                                 className="flex-1 overflow-hidden"
                             >
                                 <p className="truncate text-sm font-medium text-foreground">{session?.user?.name}</p>
-                                <p className="truncate text-xs text-muted-foreground">{session?.user?.email}</p>
                             </motion.div>
-                        )}
-                    </AnimatePresence>
-                    <AnimatePresence mode="wait">
-                        {(isMobile || !isCollapsed) && (
-                            <motion.button
-                                key="logout-btn"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.8 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                onClick={() => signOut({ callbackUrl: "/" })}
-                                className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                                title="Sign out"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <LogOut className="h-4 w-4" />
-                            </motion.button>
                         )}
                     </AnimatePresence>
                 </motion.div>

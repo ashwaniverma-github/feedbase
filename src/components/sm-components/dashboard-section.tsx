@@ -44,15 +44,50 @@ export default function DashboardSection() {
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="text-xs font-medium text-neutral-700">Feedback Activity</div>
                                         </div>
-                                        <div className="flex items-end justify-between gap-2 h-24">
-                                            {[35, 55, 40, 70, 45, 90, 60].map((h, i) => (
-                                                <div key={i} className="w-full h-full bg-neutral-100 rounded-t-sm relative group">
-                                                    <div
-                                                        className="absolute bottom-0 left-0 right-0 bg-neutral-900 rounded-t-sm transition-all duration-500 group-hover:bg-neutral-800"
-                                                        style={{ height: `${h}%` }}
+                                        <div className="h-24 relative">
+                                            {/* Line Chart SVG */}
+                                            <svg className="w-full h-full" viewBox="0 0 280 96" preserveAspectRatio="none">
+                                                {/* Gradient fill under the line */}
+                                                <defs>
+                                                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3" />
+                                                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.02" />
+                                                    </linearGradient>
+                                                </defs>
+                                                {/* Area fill */}
+                                                <path
+                                                    d="M 0 90 L 46.67 43.2 L 93.33 57.6 L 140 28.8 L 186.67 52.8 L 233.33 9.6 L 280 38.4 L 280 96 L 0 96 Z"
+                                                    fill="url(#areaGradient)"
+                                                />
+                                                {/* Line */}
+                                                <path
+                                                    d="M 0 90 L 46.67 43.2 L 93.33 57.6 L 140 28.8 L 186.67 52.8 L 233.33 9.6 L 280 38.4"
+                                                    fill="none"
+                                                    stroke="#8b5cf6"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                {/* Data points */}
+                                                {[
+                                                    { x: 0, y: 90 },
+                                                    { x: 46.67, y: 43.2 },
+                                                    { x: 93.33, y: 57.6 },
+                                                    { x: 140, y: 28.8 },
+                                                    { x: 186.67, y: 52.8 },
+                                                    { x: 233.33, y: 9.6 },
+                                                    { x: 280, y: 38.4 }
+                                                ].map((point, i) => (
+                                                    <circle
+                                                        key={i}
+                                                        cx={point.x}
+                                                        cy={point.y}
+                                                        r="3"
+                                                        fill="#8b5cf6"
+                                                        className="opacity-0 hover:opacity-100 transition-opacity"
                                                     />
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </svg>
                                         </div>
                                         <div className="flex justify-between mt-2 text-[10px] text-neutral-400">
                                             <span>Mon</span>
