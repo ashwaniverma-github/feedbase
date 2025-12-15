@@ -192,7 +192,7 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                             <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Includes:</div>
                             {[
                                 "1 project",
-                                "50 feedback submissions/month",
+                                "20 feedback submissions/month",
                                 "Basic email notifications",
                                 "Feedinbox branding on widget"
                             ].map((feature, i) => (

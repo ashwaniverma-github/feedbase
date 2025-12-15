@@ -6,7 +6,7 @@ import { prisma } from "./prisma";
 export const TIER_LIMITS = {
     free: {
         maxProjects: 1,
-        maxFeedbacksPerMonth: 50,
+        maxFeedbacksPerMonth: 20,
         canRemoveBranding: false,
         canCustomizeColors: false,
         canExportCsv: false,
