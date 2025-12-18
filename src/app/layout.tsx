@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import Script from 'next/script'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -84,6 +85,19 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           {children}
+          <Script id="feedinbox-config" strategy="afterInteractive">
+            {`
+            window.feedinboxConfig = {
+              projectKey: "cmjb5cwds000312f8j91p28yl"
+            };
+          `}
+          </Script>
+
+          {/* 2. Widget Script */}
+          <Script
+            src="https://www.feedinbox.com/widget.js"
+            strategy="lazyOnload"
+          />
         </ThemeProvider>
       </body>
     </html>
