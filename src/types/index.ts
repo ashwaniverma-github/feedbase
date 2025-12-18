@@ -63,6 +63,7 @@ declare module "next-auth" {
             email?: string | null;
             image?: string | null;
             subscriptionStatus?: string | null;
+            planCadence?: string | null;
         };
     }
 }

@@ -289,13 +289,16 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
             {/* Pro Badge or Upgrade Button */}
             <div className="px-4 pb-2">
                 {session?.user?.subscriptionStatus === "active" ? (
-                    /* Pro Badge */
+                    /* Pro/Lifetime Badge */
                     <div
                         className={cn(
-                            "w-full flex items-center gap-3 rounded-xl border border-green-500/20 bg-green-500/10 p-3 text-sm font-medium text-green-600 dark:text-green-400",
+                            "w-full flex items-center gap-3 rounded-xl border p-3 text-sm font-medium",
+                            session?.user?.planCadence === "lifetime"
+                                ? "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                : "border-green-500/20 bg-green-500/10 text-green-600 dark:text-green-400",
                             (!isMobile && isCollapsed) ? "justify-center p-2" : ""
                         )}
-                        title={(!isMobile && isCollapsed) ? "Pro Plan Active" : undefined}
+                        title={(!isMobile && isCollapsed) ? (session?.user?.planCadence === "lifetime" ? "Lifetime Deal" : "Pro Plan Active") : undefined}
                     >
                         <img src="/feedinbox.png" alt="Pro" className="h-5 w-5 shrink-0 rounded-full" />
                         <AnimatePresence mode="wait">
@@ -308,7 +311,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
                                     variants={textVariants}
                                     className="whitespace-nowrap"
                                 >
-                                    Pro Plan
+                                    {session?.user?.planCadence === "lifetime" ? "Lifetime Deal ✨" : "Pro Plan"}
                                 </motion.span>
                             )}
                         </AnimatePresence>

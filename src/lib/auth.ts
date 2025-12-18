@@ -26,6 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }) as any;
 
                 session.user.subscriptionStatus = dbUser?.dodoSubscriptionStatus || null;
+                session.user.planCadence = dbUser?.dodoPlanCadence || null;
             }
             return session;
         },

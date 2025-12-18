@@ -39,6 +39,30 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'product_id is required' }, { status: 400 });
         }
 
+        // Map known product IDs to cadence and enforce allowlist if configured
+        const MONTHLY_ID = process.env.DODO_MONTHLY_PRODUCT_ID || null;
+        const ANNUAL_ID = process.env.DODO_ANNUAL_PRODUCT_ID || null;
+        const LTD_ID =
+            process.env.DODO_LTD_PRODUCT_ID ||
+            process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID ||
+            null;
+
+        const allowedProducts = [MONTHLY_ID, ANNUAL_ID, LTD_ID].filter(Boolean) as string[];
+        if (allowedProducts.length > 0 && !allowedProducts.includes(productId)) {
+            return NextResponse.json(
+                { error: 'Unknown or disallowed product_id' },
+                { status: 400 }
+            );
+        }
+
+        // Derive cadence from product_id or incoming metadata
+        let cadence: 'monthly' | 'annual' | 'lifetime' | undefined;
+        if (productId === MONTHLY_ID) cadence = 'monthly';
+        else if (productId === ANNUAL_ID) cadence = 'annual';
+        else if (productId === LTD_ID) cadence = 'lifetime';
+        if (!cadence && (body as any)?.metadata?.cadence) {
+            cadence = (body as any).metadata.cadence;
+        }
         const baseReturn =
             body.return_url ||
             process.env.DODO_RETURN_URL_BASE ||
@@ -63,6 +87,8 @@ export async function POST(req: Request) {
                 ...(body.metadata ?? {}),
                 user_id: session.user.id,
                 email: session.user?.email ?? null,
+                ...(cadence ? { cadence } : {}),
+                ...(cadence ? { plan_cadence: cadence } : {}),
             },
         };
 

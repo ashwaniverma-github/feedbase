@@ -2,16 +2,37 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PricingSectionProps {
     isLoggedIn?: boolean;
 }
 
+type BillingPeriod = "monthly" | "annual" | "lifetime";
+
 export default function PricingSection({ isLoggedIn = false }: PricingSectionProps) {
-    const [isAnnual, setIsAnnual] = useState(false);
+    const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
     const [isLoading, setIsLoading] = useState(false);
+    const [ltdRemaining, setLtdRemaining] = useState<number | null>(null);
+    const [ltdSoldOut, setLtdSoldOut] = useState(false);
+
+    // Fetch LTD count on mount
+    useEffect(() => {
+        const fetchLtdCount = async () => {
+            try {
+                const res = await fetch("/api/ltd-count");
+                if (res.ok) {
+                    const data = await res.json();
+                    setLtdRemaining(data.remaining);
+                    setLtdSoldOut(data.soldOut);
+                }
+            } catch (e) {
+                console.error("Failed to fetch LTD count", e);
+            }
+        };
+        fetchLtdCount();
+    }, []);
 
     // Check for pending upgrade intent on mount
     useEffect(() => {
@@ -24,7 +45,7 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                 localStorage.removeItem("pending_upgrade_intent");
 
                 // Set the billing toggle to match stored intent
-                setIsAnnual(upgradeData.isAnnual);
+                setBillingPeriod(upgradeData.billingPeriod || (upgradeData.isAnnual ? "annual" : "monthly"));
 
                 // Trigger checkout automatically
                 setIsLoading(true);
@@ -35,7 +56,7 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                         product_id: upgradeData.productId,
                         metadata: {
                             plan: "pro",
-                            billing_type: "subscription",
+                            billing_type: upgradeData.billingPeriod === "lifetime" ? "one_time" : "subscription",
                             cadence: upgradeData.cadence,
                         },
                     }),
@@ -63,7 +84,21 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
             setIsLoading(true);
             const monthly = process.env.NEXT_PUBLIC_DODO_MONTHLY_PRODUCT_ID;
             const annual = process.env.NEXT_PUBLIC_DODO_ANNUAL_PRODUCT_ID;
-            const productId = isAnnual ? annual : monthly;
+            const lifetime = process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID;
+
+            let productId: string | undefined;
+            let cadence: string;
+
+            if (billingPeriod === "lifetime") {
+                productId = lifetime;
+                cadence = "lifetime";
+            } else if (billingPeriod === "annual") {
+                productId = annual;
+                cadence = "annual";
+            } else {
+                productId = monthly;
+                cadence = "monthly";
+            }
 
             if (!productId) {
                 console.error("Missing Dodo product id environment variables");
@@ -78,8 +113,8 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                     product_id: productId,
                     metadata: {
                         plan: "pro",
-                        billing_type: "subscription",
-                        cadence: isAnnual ? "annual" : "monthly",
+                        billing_type: billingPeriod === "lifetime" ? "one_time" : "subscription",
+                        cadence,
                     },
                 }),
             });
@@ -89,8 +124,8 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                 try {
                     localStorage.setItem("pending_upgrade_intent", JSON.stringify({
                         productId,
-                        isAnnual,
-                        cadence: isAnnual ? "annual" : "monthly",
+                        billingPeriod,
+                        cadence,
                     }));
                 } catch { }
 
@@ -124,6 +159,19 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
             setIsLoading(false);
         }
     };
+
+    const getProPrice = () => {
+        if (billingPeriod === "lifetime") return "29";
+        if (billingPeriod === "annual") return "40";
+        return "5";
+    };
+
+    const getPriceLabel = () => {
+        if (billingPeriod === "lifetime") return "one-time";
+        if (billingPeriod === "annual") return "/year";
+        return "/month";
+    };
+
     return (
         <section className="py-24 bg-neutral-50 border-y border-neutral-100" id="pricing">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -140,23 +188,24 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                     </p>
 
                     {/* Billing Toggle */}
-                    <div className="inline-flex items-center gap-3 rounded-full bg-white border border-neutral-200 p-1 shadow-sm">
+                    <div className="inline-flex items-center gap-1 rounded-full bg-white border border-neutral-200 p-1 shadow-sm">
                         <button
-                            onClick={() => setIsAnnual(false)}
+                            onClick={() => setBillingPeriod("monthly")}
                             className={cn(
                                 "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                                !isAnnual
+                                billingPeriod === "monthly"
                                     ? "bg-neutral-900 text-white shadow-sm"
                                     : "text-neutral-600 hover:text-neutral-900"
                             )}
                         >
                             Monthly
                         </button>
+                        {/* Annual option - temporarily disabled
                         <button
-                            onClick={() => setIsAnnual(true)}
+                            onClick={() => setBillingPeriod("annual")}
                             className={cn(
                                 "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                                isAnnual
+                                billingPeriod === "annual"
                                     ? "bg-neutral-900 text-white shadow-sm"
                                     : "text-neutral-600 hover:text-neutral-900"
                             )}
@@ -165,6 +214,31 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                             <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">
                                 Save $20
                             </span>
+                        </button>
+                        */}
+                        <button
+                            onClick={() => !ltdSoldOut && setBillingPeriod("lifetime")}
+                            disabled={ltdSoldOut}
+                            className={cn(
+                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2",
+                                billingPeriod === "lifetime"
+                                    ? "bg-neutral-900 text-white shadow-sm"
+                                    : ltdSoldOut
+                                        ? "text-neutral-400 cursor-not-allowed"
+                                        : "text-neutral-600 hover:text-neutral-900"
+                            )}
+                        >
+                            <Sparkles className="h-3.5 w-3.5" />
+                            Lifetime
+                            {ltdSoldOut ? (
+                                <span className="text-xs bg-neutral-400 text-white px-2 py-0.5 rounded-full">
+                                    Sold Out
+                                </span>
+                            ) : (
+                                <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">
+                                    Limited
+                                </span>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -179,7 +253,7 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                         <div className="mb-6">
                             <div className="flex items-baseline gap-1">
                                 <span className="text-4xl font-bold text-neutral-900">$0</span>
-                                <span className="text-neutral-500">/{isAnnual ? "year" : "month"}</span>
+                                <span className="text-neutral-500">/{billingPeriod === "lifetime" ? "forever" : billingPeriod === "annual" ? "year" : "month"}</span>
                             </div>
                         </div>
                         <Link
@@ -207,8 +281,18 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                     {/* Pro Tier */}
                     <div className="relative rounded-2xl border-2 border-neutral-900 bg-white p-8 shadow-xl">
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                            <div className="rounded-full bg-neutral-900 px-4 py-1 text-xs font-semibold text-white">
-                                Most Popular
+                            <div className={cn(
+                                "rounded-full px-4 py-1 text-xs font-semibold text-white",
+                                billingPeriod === "lifetime" ? "bg-gradient-to-r from-amber-500 to-orange-500" : "bg-neutral-900"
+                            )}>
+                                {billingPeriod === "lifetime" ? (
+                                    <span className="flex items-center gap-1.5">
+                                        <Sparkles className="h-3 w-3" />
+                                        Lifetime Deal
+                                    </span>
+                                ) : (
+                                    "Most Popular"
+                                )}
                             </div>
                         </div>
                         <div className="mb-6">
@@ -218,27 +302,41 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                         <div className="mb-6">
                             <div className="flex items-baseline gap-1">
                                 <span className="text-4xl font-bold text-neutral-900">
-                                    ${isAnnual ? "40" : "5"}
+                                    ${getProPrice()}
                                 </span>
-                                <span className="text-neutral-500">/{isAnnual ? "year" : "month"}</span>
+                                <span className="text-neutral-500">{getPriceLabel()}</span>
                             </div>
-                            {isAnnual && (
+                            {billingPeriod === "lifetime" && ltdRemaining !== null && (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-full border border-amber-200">
+                                        🔥 Only {ltdRemaining} of 50 remaining
+                                    </span>
+                                </div>
+                            )}
+                            {/* Annual messaging - temporarily disabled
+                            {billingPeriod === "annual" && (
                                 <div className="mt-1 text-xs text-green-600 font-medium">
                                     Save $20 compared to monthly
                                 </div>
                             )}
-                            {!isAnnual && (
+                            {billingPeriod === "monthly" && (
                                 <div className="mt-1 text-xs text-neutral-500">
                                     Or $40/year (save $20)
                                 </div>
                             )}
+                            */}
                         </div>
                         <button
                             onClick={handleUpgrade}
-                            disabled={isLoading}
-                            className="mb-8 flex h-11 w-full items-center justify-center rounded-full bg-neutral-900 px-6 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 disabled:opacity-50"
+                            disabled={isLoading || (billingPeriod === "lifetime" && ltdSoldOut)}
+                            className={cn(
+                                "mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50",
+                                billingPeriod === "lifetime"
+                                    ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
+                                    : "bg-neutral-900 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
+                            )}
                         >
-                            {isLoading ? "Redirecting..." : "Upgrade to Pro"}
+                            {isLoading ? "Redirecting..." : billingPeriod === "lifetime" ? "Get Lifetime Access" : "Upgrade to Pro"}
                         </button>
                         <div className="space-y-4">
                             <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Everything in Free, plus:</div>

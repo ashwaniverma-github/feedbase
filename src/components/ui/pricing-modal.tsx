@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,9 +10,32 @@ interface PricingModalProps {
     onClose: () => void;
 }
 
+type BillingPeriod = "monthly" | "annual" | "lifetime";
+
 export function PricingModal({ isOpen, onClose }: PricingModalProps) {
-    const [isAnnual, setIsAnnual] = useState(false);
+    const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
     const [isLoading, setIsLoading] = useState(false);
+    const [ltdRemaining, setLtdRemaining] = useState<number | null>(null);
+    const [ltdSoldOut, setLtdSoldOut] = useState(false);
+
+    // Fetch LTD count when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            const fetchLtdCount = async () => {
+                try {
+                    const res = await fetch("/api/ltd-count");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setLtdRemaining(data.remaining);
+                        setLtdSoldOut(data.soldOut);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch LTD count", e);
+                }
+            };
+            fetchLtdCount();
+        }
+    }, [isOpen]);
 
     // Prevent body scroll when modal is open
     useEffect(() => {
@@ -31,7 +54,21 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
             setIsLoading(true);
             const monthly = process.env.NEXT_PUBLIC_DODO_MONTHLY_PRODUCT_ID;
             const annual = process.env.NEXT_PUBLIC_DODO_ANNUAL_PRODUCT_ID;
-            const productId = isAnnual ? annual : monthly;
+            const lifetime = process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID;
+
+            let productId: string | undefined;
+            let cadence: string;
+
+            if (billingPeriod === "lifetime") {
+                productId = lifetime;
+                cadence = "lifetime";
+            } else if (billingPeriod === "annual") {
+                productId = annual;
+                cadence = "annual";
+            } else {
+                productId = monthly;
+                cadence = "monthly";
+            }
 
             if (!productId) {
                 console.error("Missing Dodo product id environment variables");
@@ -46,8 +83,8 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                     product_id: productId,
                     metadata: {
                         plan: "pro",
-                        billing_type: "subscription",
-                        cadence: isAnnual ? "annual" : "monthly",
+                        billing_type: billingPeriod === "lifetime" ? "one_time" : "subscription",
+                        cadence,
                     },
                 }),
             });
@@ -69,6 +106,18 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const getPrice = () => {
+        if (billingPeriod === "lifetime") return "29";
+        if (billingPeriod === "annual") return "40";
+        return "5";
+    };
+
+    const getPriceLabel = () => {
+        if (billingPeriod === "lifetime") return "one-time";
+        if (billingPeriod === "annual") return "/year";
+        return "/month";
     };
 
     return (
@@ -111,31 +160,48 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                             <div className="p-6 space-y-6">
                                 {/* Billing Toggle */}
                                 <div className="flex justify-center">
-                                    <div className="inline-flex items-center gap-2 rounded-full bg-muted border border-border p-1">
+                                    <div className="inline-flex items-center gap-1 rounded-full bg-muted border border-border p-1">
                                         <button
-                                            onClick={() => setIsAnnual(false)}
+                                            onClick={() => setBillingPeriod("monthly")}
                                             className={cn(
-                                                "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                                                !isAnnual
+                                                "px-3 py-2 rounded-full text-sm font-medium transition-all",
+                                                billingPeriod === "monthly"
                                                     ? "bg-primary text-primary-foreground shadow-sm"
                                                     : "text-muted-foreground hover:text-foreground"
                                             )}
                                         >
                                             Monthly
                                         </button>
+                                        {/* Annual option - temporarily disabled
                                         <button
-                                            onClick={() => setIsAnnual(true)}
+                                            onClick={() => setBillingPeriod("annual")}
                                             className={cn(
-                                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                                                isAnnual
+                                                "px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5",
+                                                billingPeriod === "annual"
                                                     ? "bg-primary text-primary-foreground shadow-sm"
                                                     : "text-muted-foreground hover:text-foreground"
                                             )}
                                         >
                                             Annual
-                                            <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">
-                                                Save $20
+                                            <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
+                                                -$20
                                             </span>
+                                        </button>
+                                        */}
+                                        <button
+                                            onClick={() => !ltdSoldOut && setBillingPeriod("lifetime")}
+                                            disabled={ltdSoldOut}
+                                            className={cn(
+                                                "px-3 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5",
+                                                billingPeriod === "lifetime"
+                                                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm"
+                                                    : ltdSoldOut
+                                                        ? "text-muted-foreground/50 cursor-not-allowed"
+                                                        : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <Sparkles className="h-3.5 w-3.5" />
+                                            Lifetime
                                         </button>
                                     </div>
                                 </div>
@@ -144,15 +210,27 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 <div className="text-center">
                                     <div className="flex items-baseline justify-center gap-1">
                                         <span className="text-5xl font-bold">
-                                            ${isAnnual ? "40" : "5"}
+                                            ${getPrice()}
                                         </span>
-                                        <span className="text-muted-foreground">/{isAnnual ? "year" : "month"}</span>
+                                        <span className="text-muted-foreground">{getPriceLabel()}</span>
                                     </div>
-                                    {isAnnual && (
+                                    {billingPeriod === "lifetime" && ltdRemaining !== null && (
+                                        <p className="mt-2 text-sm font-semibold text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full inline-block">
+                                            🔥 Only {ltdRemaining} of 50 remaining
+                                        </p>
+                                    )}
+                                    {billingPeriod === "lifetime" && ltdSoldOut && (
+                                        <p className="mt-2 text-sm font-semibold text-muted-foreground bg-muted px-3 py-1 rounded-full inline-block">
+                                            Sold Out
+                                        </p>
+                                    )}
+                                    {/* Annual messaging - temporarily disabled
+                                    {billingPeriod === "annual" && (
                                         <p className="mt-1 text-sm text-green-600 font-medium">
                                             Save $20 compared to monthly
                                         </p>
                                     )}
+                                    */}
                                 </div>
 
                                 {/* Features */}
@@ -176,8 +254,13 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 {/* CTA */}
                                 <button
                                     onClick={handleUpgrade}
-                                    disabled={isLoading}
-                                    className="w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                                    disabled={isLoading || (billingPeriod === "lifetime" && ltdSoldOut)}
+                                    className={cn(
+                                        "w-full h-12 rounded-full font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2",
+                                        billingPeriod === "lifetime"
+                                            ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                                            : "bg-primary text-primary-foreground hover:opacity-90"
+                                    )}
                                 >
                                     {isLoading ? (
                                         <>
@@ -186,8 +269,17 @@ export function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                         </>
                                     ) : (
                                         <>
-                                            <img src="/feedinbox.png" alt="Pro" className="h-4 w-4 rounded-full" />
-                                            Upgrade Now
+                                            {billingPeriod === "lifetime" ? (
+                                                <>
+                                                    <Sparkles className="h-4 w-4" />
+                                                    Get Lifetime Access
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <img src="/feedinbox.png" alt="Pro" className="h-4 w-4 rounded-full" />
+                                                    Upgrade Now
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </button>

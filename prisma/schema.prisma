@@ -59,7 +59,7 @@ model User {
   dodoCustomerId         String?  @unique
   dodoSubscriptionId     String?  @unique
   dodoProductId          String?
-  dodoPlanCadence        String?  // 'monthly' | 'annual'
+  dodoPlanCadence        String?  // 'monthly' | 'annual' | 'lifetime'
   dodoSubscriptionStatus String?  // 'active' | 'on_hold' | 'cancelled' | 'failed' | 'expired'
 }
 

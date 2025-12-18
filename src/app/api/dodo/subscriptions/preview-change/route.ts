@@ -36,6 +36,22 @@ export async function POST(req: Request) {
             );
         }
 
+        // Enforce product allowlist if configured via env
+        const MONTHLY_ID = process.env.DODO_MONTHLY_PRODUCT_ID || null;
+        const ANNUAL_ID = process.env.DODO_ANNUAL_PRODUCT_ID || null;
+        const LTD_ID =
+            process.env.DODO_LTD_PRODUCT_ID ||
+            process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID ||
+            null;
+
+        const allowedProducts = [MONTHLY_ID, ANNUAL_ID, LTD_ID].filter(Boolean) as string[];
+        if (allowedProducts.length > 0 && !allowedProducts.includes(body.product_id)) {
+            return NextResponse.json(
+                { error: "Unknown or disallowed product_id" },
+                { status: 400 }
+            );
+        }
+
         const client = new DodoPayments({
             bearerToken: apiKey,
             environment: env,

@@ -75,23 +75,49 @@ export async function POST(req: Request) {
             subscription?.subscription_id ?? subscription?.id ?? data?.subscription_id;
 
         const productId: string | undefined =
-            subscription?.product_id ?? data?.product_id ?? data?.payment?.product_id;
+            subscription?.product_id ??
+            data?.product_id ??
+            data?.payment?.product_id ??
+            // For one-time payments, product_id might be in different locations
+            data?.payload?.product_id ??
+            data?.items?.[0]?.product_id ??
+            data?.product_cart?.[0]?.product_id ??
+            data?.payment?.items?.[0]?.product_id;
 
         const statusFromPayload: string | undefined =
             subscription?.status ??
             data?.status ??
             (eventType === "payment.succeeded" ? "active" : undefined);
 
-        // cadence can be inferred from metadata we sent during checkout
+        // Cadence can be inferred from metadata or derived from known product IDs
         const meta = data?.metadata ?? subscription?.metadata ?? {};
-        const cadence: string | undefined = meta?.cadence ?? meta?.plan_cadence;
+        let cadence: 'monthly' | 'annual' | 'lifetime' | undefined =
+            (meta?.cadence as any) ?? (meta?.plan_cadence as any);
 
-        // Helper to upsert user by email if available; otherwise by customerId if user already linked
+        const MONTHLY_ID = process.env.DODO_MONTHLY_PRODUCT_ID || null;
+        const ANNUAL_ID = process.env.DODO_ANNUAL_PRODUCT_ID || null;
+        const LTD_ENV_ID =
+            process.env.DODO_LTD_PRODUCT_ID ||
+            process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID ||
+            null;
+
+        // Derive cadence from product_id when metadata is absent
+        if (!cadence && productId) {
+            if (MONTHLY_ID && productId === MONTHLY_ID) cadence = 'monthly';
+            else if (ANNUAL_ID && productId === ANNUAL_ID) cadence = 'annual';
+            else if (LTD_ENV_ID && productId === LTD_ENV_ID) cadence = 'lifetime';
+        }
+
+        // Helper to upsert user by email if available; otherwise by Dodo customer id
         async function findUser() {
             if (customerEmail) {
-                return prisma.user.findUnique({ where: { email: customerEmail } });
+                const byEmail = await prisma.user.findUnique({ where: { email: customerEmail } });
+                if (byEmail) return byEmail;
             }
-            // If no email, we skip user update. You can extend this to map Dodo customer IDs in your own lookup table.
+            if (customerId) {
+                const byCustomer = await prisma.user.findUnique({ where: { dodoCustomerId: customerId } });
+                if (byCustomer) return byCustomer;
+            }
             return null;
         }
 
@@ -123,13 +149,46 @@ export async function POST(req: Request) {
 
         const newStatus = mapEventToStatus(eventType);
 
+        // Detect Lifetime Deal purchases (prefer server-only env, fallback to NEXT_PUBLIC)
+        const ltdProductId =
+            process.env.DODO_LTD_PRODUCT_ID ||
+            process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID ||
+            null;
+        // Check if this is an LTD purchase - also check metadata cadence as fallback
+        const isLifetimeDeal = (ltdProductId && productId === ltdProductId) || cadence === "lifetime";
+
+        // Debug log for troubleshooting webhook payloads (only in non-live)
+        if (env !== "live_mode") {
+            console.log("[Dodo Webhook Debug]", {
+                eventType,
+                productId,
+                ltdProductId,
+                isLifetimeDeal,
+                cadence,
+                rawData: JSON.stringify(data).substring(0, 500),
+            });
+        }
+
         if (user) {
             const dataUpdate: Record<string, any> = {};
             if (customerId) dataUpdate.dodoCustomerId = customerId;
             if (subscriptionId) dataUpdate.dodoSubscriptionId = subscriptionId;
-            if (productId) dataUpdate.dodoProductId = productId;
-            if (cadence) dataUpdate.dodoPlanCadence = cadence;
-            if (newStatus) dataUpdate.dodoSubscriptionStatus = newStatus;
+
+            // Set product ID - for LTD, use the env var if extraction failed
+            if (productId) {
+                dataUpdate.dodoProductId = productId;
+            } else if (isLifetimeDeal && ltdProductId) {
+                dataUpdate.dodoProductId = ltdProductId;
+            }
+
+            // Set cadence: 'lifetime' for LTD, otherwise from metadata
+            if (isLifetimeDeal) {
+                dataUpdate.dodoPlanCadence = "lifetime";
+                dataUpdate.dodoSubscriptionStatus = "active";
+            } else {
+                if (cadence) dataUpdate.dodoPlanCadence = cadence;
+                if (newStatus) dataUpdate.dodoSubscriptionStatus = newStatus;
+            }
 
             if (Object.keys(dataUpdate).length > 0) {
                 await prisma.user.update({
@@ -139,24 +198,26 @@ export async function POST(req: Request) {
             }
         }
 
-        // Optional: emit logs to help with QA in test_mode
-        console.log(
-            "[Dodo Webhook]",
-            JSON.stringify(
-                {
-                    type: eventType,
-                    email: customerEmail,
-                    customerId,
-                    subscriptionId,
-                    productId,
-                    cadence,
-                    status: newStatus,
-                    receivedAt: new Date().toISOString(),
-                },
-                null,
-                2
-            )
-        );
+        // Optional: emit logs to help with QA in test_mode (only in non-live)
+        if (env !== "live_mode") {
+            console.log(
+                "[Dodo Webhook]",
+                JSON.stringify(
+                    {
+                        type: eventType,
+                        email: customerEmail,
+                        customerId,
+                        subscriptionId,
+                        productId,
+                        cadence,
+                        status: newStatus,
+                        receivedAt: new Date().toISOString(),
+                    },
+                    null,
+                    2
+                )
+            );
+        }
 
         return NextResponse.json({ received: true });
     } catch (err: any) {
