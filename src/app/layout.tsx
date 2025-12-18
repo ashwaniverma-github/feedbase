@@ -18,7 +18,7 @@ const siteUrl = "https://feedinbox.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Feedinbox - Collect User Feedback in Your Inbox",
+    default: "Feedinbox - Collect User Feedback to Your Inbox",
     template: "%s | Feedinbox",
   },
   description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox. No complex setup required.",
