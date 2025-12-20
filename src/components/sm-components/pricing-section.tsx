@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 
 interface PricingSectionProps {
     isLoggedIn?: boolean;
+    subscriptionStatus?: string | null;
 }
 
 type BillingPeriod = "monthly" | "annual" | "lifetime";
 
-export default function PricingSection({ isLoggedIn = false }: PricingSectionProps) {
+export default function PricingSection({ isLoggedIn = false, subscriptionStatus }: PricingSectionProps) {
+    const isProUser = subscriptionStatus === "active";
     const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
     const [isLoading, setIsLoading] = useState(false);
     const [ltdRemaining, setLtdRemaining] = useState<number | null>(null);
@@ -326,18 +328,27 @@ export default function PricingSection({ isLoggedIn = false }: PricingSectionPro
                             )}
                             */}
                         </div>
-                        <button
-                            onClick={handleUpgrade}
-                            disabled={isLoading || (billingPeriod === "lifetime" && ltdSoldOut)}
-                            className={cn(
-                                "mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50",
-                                billingPeriod === "lifetime"
-                                    ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
-                                    : "bg-neutral-900 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
-                            )}
-                        >
-                            {isLoading ? "Redirecting..." : billingPeriod === "lifetime" ? "Get Lifetime Access" : "Upgrade to Pro"}
-                        </button>
+                        {isProUser ? (
+                            <Link
+                                href="/dashboard"
+                                className="mb-8 flex h-11 w-full items-center justify-center rounded-full bg-neutral-900 px-6 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
+                            >
+                                Go to App
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={handleUpgrade}
+                                disabled={isLoading || (billingPeriod === "lifetime" && ltdSoldOut)}
+                                className={cn(
+                                    "mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50",
+                                    billingPeriod === "lifetime"
+                                        ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
+                                        : "bg-neutral-900 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
+                                )}
+                            >
+                                {isLoading ? "Redirecting..." : billingPeriod === "lifetime" ? "Get Lifetime Access" : "Upgrade to Pro"}
+                            </button>
+                        )}
                         <div className="space-y-4">
                             <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Everything in Free, plus:</div>
                             {[

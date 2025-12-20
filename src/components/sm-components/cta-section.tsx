@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export default function CTASection() {
+interface CTASectionProps {
+    isLoggedIn?: boolean;
+}
+
+export default function CTASection({ isLoggedIn = false }: CTASectionProps) {
     return (
         <section className="relative overflow-hidden py-24 text-center">
             <div className="absolute inset-0 -z-10 bg-neutral-900" />
@@ -17,10 +21,10 @@ export default function CTASection() {
                     Join founders who are building better products by gathering insights directly from their users.
                 </p>
                 <Link
-                    href="/login"
+                    href={isLoggedIn ? "/dashboard" : "/login"}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-8 text-base font-semibold text-neutral-900 transition-all hover:bg-neutral-100 hover:scale-105 shadow-xl shadow-white/10"
                 >
-                    Get Started for Free
+                    {isLoggedIn ? "Go to App" : "Get Started for Free"}
                     <ArrowRight className="h-4 w-4" />
                 </Link>
                 <p className="mt-6 text-sm text-neutral-500">

@@ -10,6 +10,7 @@ import Footer from "./sm-components/footer";
 export default async function LandingPage() {
     const session = await auth();
     const isLoggedIn = !!session?.user;
+    const subscriptionStatus = (session?.user as any)?.subscriptionStatus || null;
 
     return (
         <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
@@ -17,8 +18,8 @@ export default async function LandingPage() {
             <HeroSection isLoggedIn={isLoggedIn} />
             <HowItWorksSection />
             <DashboardSection />
-            <PricingSection isLoggedIn={isLoggedIn} />
-            <CTASection />
+            <PricingSection isLoggedIn={isLoggedIn} subscriptionStatus={subscriptionStatus} />
+            <CTASection isLoggedIn={isLoggedIn} />
             <Footer />
         </div>
     );

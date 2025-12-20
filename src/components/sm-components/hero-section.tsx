@@ -69,10 +69,10 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                         <p className="text-lg text-neutral-600 mb-8 leading-relaxed">
                             Simply embed a snippet of code and start receiving bug reports, feature requests, and user thoughts directly to your mailbox and dashboard.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 items-center">
+                        <div className="flex flex-col sm:flex-row gap-4 items-center flex-wrap">
                             <Link
                                 href={isLoggedIn ? "/dashboard" : "/login"}
-                                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 text-base font-semibold text-white transition-all hover:bg-neutral-800 hover:shadow-xl hover:shadow-neutral-900/20 hover:-translate-y-0.5"
+                                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 text-base font-semibold text-white transition-all hover:bg-neutral-800 hover:shadow-xl hover:shadow-neutral-900/20 hover:-translate-y-0.5 whitespace-nowrap shrink-0"
                             >
                                 {isLoggedIn ? "Go to App" : "Start for free"}
                                 <ArrowRight className="h-4 w-4" />
@@ -80,12 +80,12 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                             {!isLoggedIn && (
                                 <a
                                     href="#how-it-works"
-                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-8 text-base font-medium text-neutral-900 transition-all hover:border-neutral-300 hover:bg-neutral-50"
+                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-8 text-base font-medium text-neutral-900 transition-all hover:border-neutral-300 hover:bg-neutral-50 whitespace-nowrap shrink-0"
                                 >
                                     How it works
                                 </a>
                             )}
-                            <code className="hidden sm:inline-flex h-10 items-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-4 text-sm font-mono text-neutral-600">
+                            <code className="hidden sm:inline-flex h-10 items-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-4 text-sm font-mono text-neutral-600 whitespace-nowrap shrink-0">
                                 <span className="text-neutral-400">$</span> npm install feedinbox
                             </code>
                         </div>
