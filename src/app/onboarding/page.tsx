@@ -28,8 +28,10 @@ import {
     Terminal
 } from "lucide-react";
 import { CodeBlock } from "@/components/ui/code-block";
-import { getEmbedCode } from "@/lib/snippets";
+import { getEmbedCode, getSDKInstallCommand, getSDKCode } from "@/lib/snippets";
+import type { IntegrationMethod, PackageManager } from "@/lib/snippets";
 import Image from "next/image";
+import { Package } from "lucide-react";
 
 interface OnboardingData {
     useCase: string;
@@ -69,6 +71,8 @@ export default function OnboardingPage() {
     const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
     const [projectKey, setProjectKey] = useState("");
     const [error, setError] = useState("");
+    const [integrationMethod, setIntegrationMethod] = useState<IntegrationMethod>("sdk");
+    const [packageManager, setPackageManager] = useState<PackageManager>("npm");
 
     const [data, setData] = useState<OnboardingData>({
         useCase: "",
@@ -368,103 +372,205 @@ export default function OnboardingPage() {
                                 You're all set! 🎉
                             </h1>
                             <p className="mt-2 text-muted-foreground">
-                                Add this code to your website to start collecting feedback.
+                                Choose your preferred integration method below.
                             </p>
                         </div>
 
                         <Card className="mx-auto max-w-2xl">
                             <CardContent className="p-6 space-y-6">
-                                {/* Instructions */}
+                                {/* Integration Method Toggle */}
                                 <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">1</span>
-                                            Choose your framework
-                                        </h3>
-                                    </div>
-
+                                    <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">1</span>
+                                        Choose integration method
+                                    </h3>
                                     <div className="flex p-1 bg-muted rounded-lg">
                                         <button
-                                            onClick={() => setFramework("nextjs")}
+                                            onClick={() => setIntegrationMethod("sdk")}
                                             className={cn(
-                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                                framework === "nextjs"
+                                                "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md transition-all",
+                                                integrationMethod === "sdk"
                                                     ? "bg-background text-foreground shadow-sm"
                                                     : "text-muted-foreground hover:text-foreground"
                                             )}
                                         >
-                                            <Cpu className="h-4 w-4" />
-                                            Next.js
+                                            <Package className="h-4 w-4" />
+                                            React SDK
                                         </button>
                                         <button
-                                            onClick={() => setFramework("react")}
+                                            onClick={() => setIntegrationMethod("script")}
                                             className={cn(
-                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                                framework === "react"
-                                                    ? "bg-background text-foreground shadow-sm"
-                                                    : "text-muted-foreground hover:text-foreground"
-                                            )}
-                                        >
-                                            <Code2 className="h-4 w-4" />
-                                            React
-                                        </button>
-                                        <button
-                                            onClick={() => setFramework("html")}
-                                            className={cn(
-                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                                framework === "html"
+                                                "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md transition-all",
+                                                integrationMethod === "script"
                                                     ? "bg-background text-foreground shadow-sm"
                                                     : "text-muted-foreground hover:text-foreground"
                                             )}
                                         >
                                             <FileCode className="h-4 w-4" />
-                                            HTML
+                                            Script Tag
                                         </button>
                                     </div>
-
-                                    <div className="relative">
-                                        <CodeBlock
-                                            code={getEmbedCode(
-                                                framework,
-                                                projectKey,
-                                                typeof window !== 'undefined' ? window.location.origin : ''
-                                            )}
-                                            language={framework === "html" ? "html" : "typescript"}
-                                            filename={
-                                                framework === "nextjs" ? "app/layout.tsx" :
-                                                    framework === "react" ? "App.tsx" :
-                                                        "index.html"
-                                            }
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">2</span>
-                                        Paste before the closing &lt;/body&gt; tag
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        Add this snippet to every page where you want the feedback widget to appear.
-                                        The widget will show up as a small button in the bottom-right corner.
+                                    <p className="text-xs text-muted-foreground">
+                                        {integrationMethod === "sdk"
+                                            ? <>Recommended for React & Next.js projects. <a href="https://www.npmjs.com/package/feedinbox" target="_blank" rel="noopener" className="text-primary hover:underline">View docs →</a></>
+                                            : "Works with any website. Just paste the script tag."}
                                     </p>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">3</span>
-                                        Start collecting feedback
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        Your users can now submit feedback directly from your website.
-                                        All submissions will appear in your dashboard.
-                                    </p>
-                                </div>
+                                {/* SDK Integration */}
+                                {integrationMethod === "sdk" && (
+                                    <>
+                                        {/* Step 2: Install Package */}
+                                        <div className="space-y-4">
+                                            <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">2</span>
+                                                Install the package
+                                            </h3>
+                                            <div className="flex p-1 bg-muted rounded-lg">
+                                                {(["npm", "yarn", "pnpm", "bun"] as const).map((pm) => (
+                                                    <button
+                                                        key={pm}
+                                                        onClick={() => setPackageManager(pm)}
+                                                        className={cn(
+                                                            "flex-1 py-1.5 text-xs font-medium rounded-md transition-all",
+                                                            packageManager === pm
+                                                                ? "bg-background text-foreground shadow-sm"
+                                                                : "text-muted-foreground hover:text-foreground"
+                                                        )}
+                                                    >
+                                                        {pm}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <CodeBlock
+                                                code={getSDKInstallCommand(packageManager)}
+                                                language="bash"
+                                                filename="Terminal"
+                                            />
+                                        </div>
+
+                                        {/* Step 3: Add Component */}
+                                        <div className="space-y-4">
+                                            <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">3</span>
+                                                Add the component
+                                            </h3>
+                                            <div className="flex p-1 bg-muted rounded-lg">
+                                                <button
+                                                    onClick={() => setFramework("nextjs")}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                        framework === "nextjs"
+                                                            ? "bg-background text-foreground shadow-sm"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <Cpu className="h-4 w-4" />
+                                                    Next.js
+                                                </button>
+                                                <button
+                                                    onClick={() => setFramework("react")}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                        framework === "react"
+                                                            ? "bg-background text-foreground shadow-sm"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <Code2 className="h-4 w-4" />
+                                                    React
+                                                </button>
+                                            </div>
+                                            <CodeBlock
+                                                code={getSDKCode(framework === "html" ? "react" : framework, projectKey)}
+                                                language="typescript"
+                                                filename={framework === "nextjs" ? "app/layout.tsx" : "App.tsx"}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* Script Integration */}
+                                {integrationMethod === "script" && (
+                                    <>
+                                        {/* Step 2: Choose Framework */}
+                                        <div className="space-y-4">
+                                            <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">2</span>
+                                                Choose your framework
+                                            </h3>
+                                            <div className="flex p-1 bg-muted rounded-lg">
+                                                <button
+                                                    onClick={() => setFramework("nextjs")}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                        framework === "nextjs"
+                                                            ? "bg-background text-foreground shadow-sm"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <Cpu className="h-4 w-4" />
+                                                    Next.js
+                                                </button>
+                                                <button
+                                                    onClick={() => setFramework("react")}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                        framework === "react"
+                                                            ? "bg-background text-foreground shadow-sm"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <Code2 className="h-4 w-4" />
+                                                    React
+                                                </button>
+                                                <button
+                                                    onClick={() => setFramework("html")}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                                        framework === "html"
+                                                            ? "bg-background text-foreground shadow-sm"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <FileCode className="h-4 w-4" />
+                                                    HTML
+                                                </button>
+                                            </div>
+                                            <CodeBlock
+                                                code={getEmbedCode(
+                                                    framework,
+                                                    projectKey,
+                                                    typeof window !== 'undefined' ? window.location.origin : ''
+                                                )}
+                                                language={framework === "html" ? "html" : "typescript"}
+                                                filename={
+                                                    framework === "nextjs" ? "app/layout.tsx" :
+                                                        framework === "react" ? "App.tsx" :
+                                                            "index.html"
+                                                }
+                                            />
+                                        </div>
+
+                                        {/* Step 3: Instructions */}
+                                        <div className="space-y-4">
+                                            <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">3</span>
+                                                {framework === "html" ? "Paste before </body>" : "Add to your layout"}
+                                            </h3>
+                                            <p className="text-sm text-muted-foreground">
+                                                {framework === "html"
+                                                    ? "Add this snippet to every page where you want the feedback widget to appear."
+                                                    : "The widget will automatically appear on all pages."}
+                                            </p>
+                                        </div>
+                                    </>
+                                )}
 
                                 {/* Customization hint */}
                                 <div className="rounded-lg border border-border bg-muted/50 p-4">
                                     <p className="text-sm text-muted-foreground">
-                                        <strong className="text-foreground">💡 Tip:</strong> You can customize the widget's position and color
+                                        <strong className="text-foreground">💡 Tip:</strong> You can customize the widget's appearance
                                         in your project settings after setup.
                                     </p>
                                 </div>
