@@ -43,11 +43,11 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Feedinbox",
-    title: "Feedinbox - Collect User Feedback in Your Inbox",
+    title: "Feedinbox - Collect User Feedback to Your Inbox",
     description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox.",
     images: [
       {
-        url: "/OG.png",
+        url: "/OG.png?v=2",
         width: 1200,
         height: 630,
         alt: "Feedinbox - Feedback for Founders",
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Feedinbox - Collect User Feedback in Your Inbox",
+    title: "Feedinbox - Collect User Feedback to Your Inbox",
     description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox.",
-    images: ["/OG.png"],
+    images: ["/OG.png?v=2"],
     creator: "@feedinbox",
   },
   icons: {
