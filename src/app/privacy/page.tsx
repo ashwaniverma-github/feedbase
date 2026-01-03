@@ -77,7 +77,7 @@ export default function PrivacyPage() {
                     <div className="space-y-4">
                         <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-6">6. Contact Us</h2>
                         <p>
-                            If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@feedinbox.com" className="text-blue-600 hover:underline">support@feedinbox.com</a>.
+                            If you have any questions about this Privacy Policy, please contact us at <a href="mailto:ap8606574@gmail.com" className="text-blue-600 hover:underline">ap8606574@gmail.com</a>.
                         </p>
                     </div>
                 </div>

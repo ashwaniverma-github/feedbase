@@ -370,7 +370,7 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                 </div>
 
                 <p className="text-center text-sm text-neutral-500 mt-10">
-                    Questions? <a href="mailto:support@feedinbox.com" className="text-neutral-900 underline hover:no-underline">Contact us</a>
+                    Questions? <a href="mailto:ap8606574@gmail.com" className="text-neutral-900 underline hover:no-underline">Contact us</a>
                 </p>
             </div>
         </section>
