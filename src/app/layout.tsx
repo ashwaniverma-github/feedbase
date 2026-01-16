@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Script from 'next/script'
 
@@ -92,6 +93,7 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           {children}
+          <Analytics />
           <Script id="feedinbox-config" strategy="afterInteractive">
             {`
             window.feedinboxConfig = {
