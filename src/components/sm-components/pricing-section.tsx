@@ -14,8 +14,7 @@ type BillingPeriod = "monthly" | "annual" | "lifetime";
 
 export default function PricingSection({ isLoggedIn = false, subscriptionStatus }: PricingSectionProps) {
     const isProUser = subscriptionStatus === "active";
-    const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<BillingPeriod | null>(null);
     const [ltdRemaining, setLtdRemaining] = useState<number | null>(null);
     const [ltdSoldOut, setLtdSoldOut] = useState(false);
 
@@ -46,11 +45,8 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                 const upgradeData = JSON.parse(pendingUpgrade);
                 localStorage.removeItem("pending_upgrade_intent");
 
-                // Set the billing toggle to match stored intent
-                setBillingPeriod(upgradeData.billingPeriod || (upgradeData.isAnnual ? "annual" : "monthly"));
-
                 // Trigger checkout automatically
-                setIsLoading(true);
+                setIsLoading(upgradeData.billingPeriod || "monthly");
                 const res = await fetch("/api/dodo/create-checkout-session", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -74,16 +70,16 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                 }
             } catch (e) {
                 console.error("Pending upgrade error", e);
-                setIsLoading(false);
+                setIsLoading(null);
             }
         };
 
         checkPendingUpgrade();
     }, [isLoggedIn]);
 
-    const handleUpgrade = async () => {
+    const handleUpgrade = async (billingPeriod: BillingPeriod) => {
         try {
-            setIsLoading(true);
+            setIsLoading(billingPeriod);
             const monthly = process.env.NEXT_PUBLIC_DODO_MONTHLY_PRODUCT_ID;
             const annual = process.env.NEXT_PUBLIC_DODO_ANNUAL_PRODUCT_ID;
             const lifetime = process.env.NEXT_PUBLIC_DODO_LTD_PRODUCT_ID;
@@ -104,7 +100,7 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
 
             if (!productId) {
                 console.error("Missing Dodo product id environment variables");
-                setIsLoading(false);
+                setIsLoading(null);
                 return;
             }
 
@@ -158,20 +154,8 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
         } catch (e) {
             console.error("Upgrade checkout error", e);
         } finally {
-            setIsLoading(false);
+            setIsLoading(null);
         }
-    };
-
-    const getProPrice = () => {
-        if (billingPeriod === "lifetime") return "29";
-        if (billingPeriod === "annual") return "40";
-        return "5";
-    };
-
-    const getPriceLabel = () => {
-        if (billingPeriod === "lifetime") return "one-time";
-        if (billingPeriod === "annual") return "/year";
-        return "/month";
     };
 
     return (
@@ -185,67 +169,12 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                     <h2 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl mb-4">
                         Start free, upgrade when ready.
                     </h2>
-                    <p className="text-lg text-neutral-600 max-w-2xl mx-auto mb-8">
+                    <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
                         No hidden fees. No surprises. Just simple pricing that scales with you.
                     </p>
-
-                    {/* Billing Toggle */}
-                    <div className="inline-flex items-center gap-1 rounded-full bg-white border border-neutral-200 p-1 shadow-sm">
-                        <button
-                            onClick={() => setBillingPeriod("monthly")}
-                            className={cn(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                                billingPeriod === "monthly"
-                                    ? "bg-neutral-900 text-white shadow-sm"
-                                    : "text-neutral-600 hover:text-neutral-900"
-                            )}
-                        >
-                            Monthly
-                        </button>
-                        {/* Annual option - temporarily disabled
-                        <button
-                            onClick={() => setBillingPeriod("annual")}
-                            className={cn(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                                billingPeriod === "annual"
-                                    ? "bg-neutral-900 text-white shadow-sm"
-                                    : "text-neutral-600 hover:text-neutral-900"
-                            )}
-                        >
-                            Annual
-                            <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">
-                                Save $20
-                            </span>
-                        </button>
-                        */}
-                        <button
-                            onClick={() => !ltdSoldOut && setBillingPeriod("lifetime")}
-                            disabled={ltdSoldOut}
-                            className={cn(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                                billingPeriod === "lifetime"
-                                    ? "bg-neutral-900 text-white shadow-sm"
-                                    : ltdSoldOut
-                                        ? "text-neutral-400 cursor-not-allowed"
-                                        : "text-neutral-600 hover:text-neutral-900"
-                            )}
-                        >
-                            <Sparkles className="h-3.5 w-3.5" />
-                            Lifetime
-                            {ltdSoldOut ? (
-                                <span className="text-xs bg-neutral-400 text-white px-2 py-0.5 rounded-full">
-                                    Sold Out
-                                </span>
-                            ) : (
-                                <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">
-                                    Limited
-                                </span>
-                            )}
-                        </button>
-                    </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     {/* Free Tier */}
                     <div className="relative rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm hover:shadow-lg transition-shadow duration-300">
                         <div className="mb-6">
@@ -255,7 +184,7 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                         <div className="mb-6">
                             <div className="flex items-baseline gap-1">
                                 <span className="text-4xl font-bold text-neutral-900">$0</span>
-                                <span className="text-neutral-500">/{billingPeriod === "lifetime" ? "forever" : billingPeriod === "annual" ? "year" : "month"}</span>
+                                <span className="text-neutral-500">/forever</span>
                             </div>
                         </div>
                         <Link
@@ -280,53 +209,22 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                         </div>
                     </div>
 
-                    {/* Pro Tier */}
+                    {/* Pro Monthly Tier */}
                     <div className="relative rounded-2xl border-2 border-neutral-900 bg-white p-8 shadow-xl">
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                            <div className={cn(
-                                "rounded-full px-4 py-1 text-xs font-semibold text-white",
-                                billingPeriod === "lifetime" ? "bg-gradient-to-r from-amber-500 to-orange-500" : "bg-neutral-900"
-                            )}>
-                                {billingPeriod === "lifetime" ? (
-                                    <span className="flex items-center gap-1.5">
-                                        <Sparkles className="h-3 w-3" />
-                                        Lifetime Deal
-                                    </span>
-                                ) : (
-                                    "Most Popular"
-                                )}
+                            <div className="rounded-full px-4 py-1 text-xs font-semibold text-white bg-neutral-900">
+                                Most Popular
                             </div>
                         </div>
                         <div className="mb-6">
-                            <h3 className="text-xl font-bold text-neutral-900 mb-2">Pro</h3>
+                            <h3 className="text-xl font-bold text-neutral-900 mb-2">Pro Monthly</h3>
                             <p className="text-sm text-neutral-500">For serious builders</p>
                         </div>
                         <div className="mb-6">
                             <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-bold text-neutral-900">
-                                    ${getProPrice()}
-                                </span>
-                                <span className="text-neutral-500">{getPriceLabel()}</span>
+                                <span className="text-4xl font-bold text-neutral-900">$5</span>
+                                <span className="text-neutral-500">/month</span>
                             </div>
-                            {billingPeriod === "lifetime" && ltdRemaining !== null && (
-                                <div className="mt-2 flex items-center gap-2">
-                                    <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-full border border-amber-200">
-                                        🔥 Only {ltdRemaining} of 50 remaining
-                                    </span>
-                                </div>
-                            )}
-                            {/* Annual messaging - temporarily disabled
-                            {billingPeriod === "annual" && (
-                                <div className="mt-1 text-xs text-green-600 font-medium">
-                                    Save $20 compared to monthly
-                                </div>
-                            )}
-                            {billingPeriod === "monthly" && (
-                                <div className="mt-1 text-xs text-neutral-500">
-                                    Or $40/year (save $20)
-                                </div>
-                            )}
-                            */}
                         </div>
                         {isProUser ? (
                             <Link
@@ -337,16 +235,80 @@ export default function PricingSection({ isLoggedIn = false, subscriptionStatus 
                             </Link>
                         ) : (
                             <button
-                                onClick={handleUpgrade}
-                                disabled={isLoading || (billingPeriod === "lifetime" && ltdSoldOut)}
-                                className={cn(
-                                    "mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50",
-                                    billingPeriod === "lifetime"
-                                        ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
-                                        : "bg-neutral-900 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
-                                )}
+                                onClick={() => handleUpgrade("monthly")}
+                                disabled={isLoading === "monthly"}
+                                className="mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50 bg-neutral-900 hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20"
                             >
-                                {isLoading ? "Redirecting..." : billingPeriod === "lifetime" ? "Get Lifetime Access" : "Upgrade to Pro"}
+                                {isLoading === "monthly" ? "Redirecting..." : "Upgrade to Pro"}
+                            </button>
+                        )}
+                        <div className="space-y-4">
+                            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Everything in Free, plus:</div>
+                            {[
+                                "Unlimited projects",
+                                "1,000 feedback submissions/month",
+                                "Unlimited data retention",
+                                "Remove Feedinbox branding",
+                                "Customize widgets",
+                                "Priority email notifications",
+                                "Export to CSV/PDF"
+                            ].map((feature, i) => (
+                                <div key={i} className="flex items-center gap-3 text-sm text-neutral-700 font-medium">
+                                    <Check className="h-4 w-4 text-green-600 shrink-0" />
+                                    {feature}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Lifetime Tier */}
+                    <div className="relative rounded-2xl border-2 border-amber-400 bg-white p-8 shadow-xl">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                            <div className="rounded-full px-4 py-1 text-xs font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500">
+                                <span className="flex items-center gap-1.5">
+                                    <Sparkles className="h-3 w-3" />
+                                    Lifetime Deal
+                                </span>
+                            </div>
+                        </div>
+                        <div className="mb-6">
+                            <h3 className="text-xl font-bold text-neutral-900 mb-2">Pro Lifetime</h3>
+                            <p className="text-sm text-neutral-500">Pay once, own forever</p>
+                        </div>
+                        <div className="mb-6">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-4xl font-bold text-neutral-900">$29</span>
+                                <span className="text-neutral-500">one-time</span>
+                            </div>
+                            {ltdRemaining !== null && !ltdSoldOut && (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-full border border-amber-200">
+                                        🔥 Only {ltdRemaining} of 50 remaining
+                                    </span>
+                                </div>
+                            )}
+                            {ltdSoldOut && (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-neutral-500 bg-neutral-100 px-2 py-1 rounded-full border border-neutral-200">
+                                        Sold Out
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                        {isProUser ? (
+                            <Link
+                                href="/dashboard"
+                                className="mb-8 flex h-11 w-full items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-6 text-sm font-semibold text-white transition-all hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
+                            >
+                                Go to App
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={() => handleUpgrade("lifetime")}
+                                disabled={isLoading === "lifetime" || ltdSoldOut}
+                                className="mb-8 flex h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold text-white transition-all disabled:opacity-50 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 hover:shadow-lg hover:shadow-amber-500/20"
+                            >
+                                {isLoading === "lifetime" ? "Redirecting..." : ltdSoldOut ? "Sold Out" : "Get Lifetime Access"}
                             </button>
                         )}
                         <div className="space-y-4">
