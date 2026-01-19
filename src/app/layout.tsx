@@ -62,17 +62,7 @@ export const metadata: Metadata = {
     images: ["/OG.png?v=2"],
     creator: "@feedinbox",
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/feedinbox.png", type: "image/png", sizes: "192x192" },
-      { url: "/feedinbox.png", type: "image/png", sizes: "512x512" },
-    ],
-    apple: [
-      { url: "/feedinbox.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-  },
+
   manifest: "/manifest.json",
 };
 
