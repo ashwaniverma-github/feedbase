@@ -97,6 +97,20 @@ export default function RootLayout({
             src="https://www.feedinbox.com/widget.js"
             strategy="lazyOnload"
           />
+
+          {/* Google Analytics */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-81LYZN8CPG"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-81LYZN8CPG');
+            `}
+          </Script>
         </ThemeProvider>
       </body>
     </html>
