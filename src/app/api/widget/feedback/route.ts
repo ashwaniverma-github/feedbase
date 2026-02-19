@@ -69,31 +69,33 @@ export async function POST(request: Request) {
             },
         });
 
-        // Send email notification to project owner (non-blocking)
+        // Send email notification to project owner
         if (project.user?.email) {
             const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
             const dashboardUrl = `${baseUrl}/projects/${project.id}`;
 
-            resend.emails.send({
-                from: FROM_EMAIL,
-                to: project.user.email,
-                subject: `New ${validated.data.category} feedback on ${project.name}`,
-                react: NewFeedbackEmail({
-                    projectName: project.name,
-                    ownerName: project.user.name || "there",
-                    category: validated.data.category,
-                    message: validated.data.message,
-                    userEmail: validated.data.userEmail,
-                    pageUrl: validated.data.pageUrl,
-                    submittedAt: new Date().toLocaleString("en-US", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
+            try {
+                await resend.emails.send({
+                    from: FROM_EMAIL,
+                    to: project.user.email,
+                    subject: `New ${validated.data.category} feedback on ${project.name}`,
+                    react: NewFeedbackEmail({
+                        projectName: project.name,
+                        ownerName: project.user.name || "there",
+                        category: validated.data.category,
+                        message: validated.data.message,
+                        userEmail: validated.data.userEmail,
+                        pageUrl: validated.data.pageUrl,
+                        submittedAt: new Date().toLocaleString("en-US", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                        }),
+                        dashboardUrl,
                     }),
-                    dashboardUrl,
-                }),
-            }).catch((error) => {
+                });
+            } catch (error) {
                 console.error("Failed to send email notification:", error);
-            });
+            }
         }
 
         return corsResponse(

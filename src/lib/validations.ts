@@ -30,7 +30,10 @@ export const createFeedbackSchema = z.object({
         if (!val || val.trim() === "") return undefined;
         return val;
     }).pipe(z.string().email().optional()),
-    pageUrl: z.string().url().optional(),
+    pageUrl: z.string().optional().transform((val) => {
+        if (!val || val.trim() === '') return undefined;
+        try { new URL(val); return val; } catch { return undefined; }
+    }),
 });
 
 export const feedbackFilterSchema = z.object({
