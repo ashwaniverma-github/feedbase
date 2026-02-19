@@ -30,6 +30,10 @@ export const createFeedbackSchema = z.object({
         if (!val || val.trim() === "") return undefined;
         return val;
     }).pipe(z.string().email().optional()),
+    // pageUrl is intentionally lenient: the widget is a public API embedded on any
+    // website, so it can receive non-standard URLs (localhost, file://, chrome-extension://).
+    // Rather than rejecting the whole submission with a 400, we strip invalid URLs to
+    // undefined so feedback is still saved and the email notification is still sent.
     pageUrl: z.string().optional().transform((val) => {
         if (!val || val.trim() === '') return undefined;
         try { new URL(val); return val; } catch { return undefined; }
