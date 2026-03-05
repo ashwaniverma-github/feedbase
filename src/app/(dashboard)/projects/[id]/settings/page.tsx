@@ -88,7 +88,7 @@ export default function ProjectSettingsPage({
 
     // Local getEmbedCode removed coverage
 
-    if (loading) {
+    if (loading || !origin) {
         return (
             <>
                 <Header title="Settings" />
