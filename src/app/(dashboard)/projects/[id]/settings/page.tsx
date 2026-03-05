@@ -8,10 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loading } from "@/components/ui/loading";
 import { CodeBlock } from "@/components/ui/code-block";
-import { Copy, Check, Trash2, Code2, FileCode, Cpu, Package } from "lucide-react";
+import { Copy, Check, Trash2, Code2, FileCode, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getEmbedCode, getSDKInstallCommand, getSDKCode } from "@/lib/snippets";
-import type { IntegrationMethod, PackageManager } from "@/lib/snippets";
+import { getEmbedCode } from "@/lib/snippets";
 import type { Project } from "@/types";
 
 export default function ProjectSettingsPage({
@@ -29,8 +28,6 @@ export default function ProjectSettingsPage({
     const [domain, setDomain] = useState("");
     const [copied, setCopied] = useState(false);
     const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
-    const [integrationMethod, setIntegrationMethod] = useState<IntegrationMethod>("sdk");
-    const [packageManager, setPackageManager] = useState<PackageManager>("npm");
 
     useEffect(() => {
         fetchProject();
@@ -141,163 +138,58 @@ export default function ProjectSettingsPage({
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        {/* Integration Method Toggle */}
+                        {/* Framework Selector */}
                         <div className="flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                             <button
-                                onClick={() => setIntegrationMethod("sdk")}
+                                onClick={() => setFramework("nextjs")}
                                 className={cn(
-                                    "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md transition-all",
-                                    integrationMethod === "sdk"
+                                    "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                    framework === "nextjs"
                                         ? "bg-white dark:bg-black text-foreground shadow-sm"
                                         : "text-neutral-500 hover:text-foreground"
                                 )}
                             >
-                                <Package className="h-4 w-4" />
-                                React SDK
+                                <Cpu className="h-4 w-4" />
+                                Next.js
                             </button>
                             <button
-                                onClick={() => setIntegrationMethod("script")}
+                                onClick={() => setFramework("react")}
                                 className={cn(
-                                    "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md transition-all",
-                                    integrationMethod === "script"
+                                    "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                    framework === "react"
+                                        ? "bg-white dark:bg-black text-foreground shadow-sm"
+                                        : "text-neutral-500 hover:text-foreground"
+                                )}
+                            >
+                                <Code2 className="h-4 w-4" />
+                                React
+                            </button>
+                            <button
+                                onClick={() => setFramework("html")}
+                                className={cn(
+                                    "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
+                                    framework === "html"
                                         ? "bg-white dark:bg-black text-foreground shadow-sm"
                                         : "text-neutral-500 hover:text-foreground"
                                 )}
                             >
                                 <FileCode className="h-4 w-4" />
-                                Script Tag
+                                HTML
                             </button>
                         </div>
-
-                        {/* SDK Integration */}
-                        {integrationMethod === "sdk" && (
-                            <div className="space-y-4">
-                                <p className="text-xs text-neutral-500">
-                                    Recommended for React & Next.js projects.{" "}
-                                    <a href="https://www.npmjs.com/package/feedinbox" target="_blank" rel="noopener" className="text-primary hover:underline">
-                                        View docs →
-                                    </a>
-                                </p>
-                                {/* Install Command */}
-                                <div className="space-y-2">
-                                    <p className="text-sm font-medium">1. Install the package</p>
-                                    <div className="flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                                        {(["npm", "yarn", "pnpm", "bun"] as const).map((pm) => (
-                                            <button
-                                                key={pm}
-                                                onClick={() => setPackageManager(pm)}
-                                                className={cn(
-                                                    "flex-1 py-1.5 text-xs font-medium rounded-md transition-all",
-                                                    packageManager === pm
-                                                        ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                        : "text-neutral-500 hover:text-foreground"
-                                                )}
-                                            >
-                                                {pm}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <CodeBlock
-                                        code={getSDKInstallCommand(packageManager)}
-                                        language="bash"
-                                        filename="Terminal"
-                                    />
-                                </div>
-
-                                {/* Component Code */}
-                                <div className="space-y-2">
-                                    <p className="text-sm font-medium">2. Add the component</p>
-                                    <div className="flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                                        <button
-                                            onClick={() => setFramework("nextjs")}
-                                            className={cn(
-                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                                framework === "nextjs"
-                                                    ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                    : "text-neutral-500 hover:text-foreground"
-                                            )}
-                                        >
-                                            <Cpu className="h-4 w-4" />
-                                            Next.js
-                                        </button>
-                                        <button
-                                            onClick={() => setFramework("react")}
-                                            className={cn(
-                                                "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                                framework === "react"
-                                                    ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                    : "text-neutral-500 hover:text-foreground"
-                                            )}
-                                        >
-                                            <Code2 className="h-4 w-4" />
-                                            React
-                                        </button>
-                                    </div>
-                                    <CodeBlock
-                                        code={getSDKCode(framework === "html" ? "react" : framework, project?.widgetKey || "pk_xxx")}
-                                        language="typescript"
-                                        filename={framework === "nextjs" ? "app/layout.tsx" : "App.tsx"}
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Script Integration */}
-                        {integrationMethod === "script" && (
-                            <div className="space-y-4">
-                                <div className="flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                                    <button
-                                        onClick={() => setFramework("nextjs")}
-                                        className={cn(
-                                            "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                            framework === "nextjs"
-                                                ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                : "text-neutral-500 hover:text-foreground"
-                                        )}
-                                    >
-                                        <Cpu className="h-4 w-4" />
-                                        Next.js
-                                    </button>
-                                    <button
-                                        onClick={() => setFramework("react")}
-                                        className={cn(
-                                            "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                            framework === "react"
-                                                ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                : "text-neutral-500 hover:text-foreground"
-                                        )}
-                                    >
-                                        <Code2 className="h-4 w-4" />
-                                        React
-                                    </button>
-                                    <button
-                                        onClick={() => setFramework("html")}
-                                        className={cn(
-                                            "flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all",
-                                            framework === "html"
-                                                ? "bg-white dark:bg-black text-foreground shadow-sm"
-                                                : "text-neutral-500 hover:text-foreground"
-                                        )}
-                                    >
-                                        <FileCode className="h-4 w-4" />
-                                        HTML
-                                    </button>
-                                </div>
-                                <CodeBlock
-                                    code={getEmbedCode(
-                                        framework,
-                                        project?.widgetKey || "pk_xxx",
-                                        typeof window !== 'undefined' ? window.location.origin : ''
-                                    )}
-                                    language={framework === "html" ? "html" : "typescript"}
-                                    filename={
-                                        framework === "nextjs" ? "app/layout.tsx" :
-                                            framework === "react" ? "App.tsx" :
-                                                "index.html"
-                                    }
-                                />
-                            </div>
-                        )}
+                        <CodeBlock
+                            code={getEmbedCode(
+                                framework,
+                                project?.widgetKey || "pk_xxx",
+                                typeof window !== 'undefined' ? window.location.origin : ''
+                            )}
+                            language={framework === "html" ? "html" : "typescript"}
+                            filename={
+                                framework === "nextjs" ? "app/layout.tsx" :
+                                    framework === "react" ? "App.tsx" :
+                                        "index.html"
+                            }
+                        />
 
                         <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700">
                             <p className="text-sm text-neutral-500">

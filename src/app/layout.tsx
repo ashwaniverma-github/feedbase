@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     default: "Feedinbox - Collect User Feedback to Your Inbox",
     template: "%s | Feedinbox",
   },
-  description: "Collect feedback, bug reports, and feature requests from your users. Embed one snippet of code, receive everything straight to your inbox. No complex setup required.",
-  keywords: ["feedback", "user feedback", "feedback widget", "bug reports", "feature requests", "customer feedback", "feedback tool", "saas feedback"],
+  description: "The simplest user feedback widget for your website. Collect bug reports, feature requests, and feedback—delivered straight to your email inbox. One script tag, 2-minute setup, free to start.",
+  keywords: ["feedback widget", "user feedback tool", "website feedback widget", "feedback to email", "bug report widget", "feature request tool", "customer feedback widget", "feedback collection", "in-app feedback", "saas feedback tool", "feedback widget for website free", "simple feedback tool", "embedded feedback widget"],
   authors: [{ name: "Feedinbox" }],
   creator: "Feedinbox",
   publisher: "Feedinbox",
@@ -84,17 +84,9 @@ export default function RootLayout({
         >
           {children}
           <Analytics />
-          <Script id="feedinbox-config" strategy="afterInteractive">
-            {`
-            window.feedinboxConfig = {
-              projectKey: "cmjb5cwds000312f8j91p28yl"
-            };
-          `}
-          </Script>
-
-          {/* 2. Widget Script */}
           <Script
             src="https://www.feedinbox.com/widget.js"
+            data-project-key="cmjb5cwds000312f8j91p28yl"
             strategy="lazyOnload"
           />
 

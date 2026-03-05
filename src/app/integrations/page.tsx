@@ -28,7 +28,7 @@ export default function IntegrationsIndexPage() {
                         Works with your stack
                     </h1>
                     <p className="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-                        Add Feedinbox to any website or app in under 2 minutes. npm package or script tag—your choice.
+                        Add Feedinbox to any website or app in under 2 minutes. Just a script tag. Works everywhere.
                     </p>
                 </div>
             </section>
@@ -56,7 +56,7 @@ export default function IntegrationsIndexPage() {
                                 </p>
                                 <div className="flex items-center justify-between">
                                     <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">
-                                        {integration.installMethod === "npm" ? "npm install" : "Script tag"}
+                                        Script tag
                                     </span>
                                     <span className="inline-flex items-center gap-1 text-sm font-medium text-neutral-900 group-hover:gap-2 transition-all">
                                         View guide
@@ -88,10 +88,7 @@ export default function IntegrationsIndexPage() {
                             <div className="ml-2 text-xs font-mono text-neutral-400">Any website</div>
                         </div>
                         <pre className="p-6 overflow-x-auto text-sm font-mono leading-relaxed">
-                            <code>{`<script>
-  window.feedinboxConfig = { projectKey: "your_key" };
-</script>
-<script async src="https://feedinbox.com/widget.js"></script>`}</code>
+                            <code>{`<script async src="https://feedinbox.com/widget.js" data-project-key="your_key"></script>`}</code>
                         </pre>
                     </div>
                 </div>

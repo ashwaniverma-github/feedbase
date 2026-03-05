@@ -172,6 +172,190 @@ export const alternatives: Alternative[] = [
             { title: "Perfect for Small Teams", description: "Built for makers, not support departments." }
         ],
         keywords: ["zendesk alternative", "zendesk vs feedinbox", "simple zendesk", "feedback tool alternative"]
+    },
+    {
+        slug: "usersnap",
+        competitorName: "Usersnap",
+        metaTitle: "Feedinbox vs Usersnap - Affordable Feedback Alternative",
+        metaDescription: "Usersnap starts at $69/mo. Feedinbox delivers user feedback to your inbox for $5/mo. No screenshots needed—just simple, fast feedback.",
+        heroHeadline: "Usersnap alternative without the price tag",
+        heroSubheadline: "Usersnap is great for visual bug tracking. But if you just need user feedback delivered to your inbox, there's a 14x cheaper way.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard only" },
+            { feature: "Screenshot Annotations", feedinbox: "✗", competitor: "✓" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "15+ minutes" },
+            { feature: "Free Tier", feedinbox: "✓ 20 submissions/mo", competitor: "Limited free trial" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $69/mo" },
+            { feature: "Session Recording", feedinbox: "✗", competitor: "✓" }
+        ],
+        advantages: [
+            { title: "14x Cheaper", description: "Get user feedback for $5/mo instead of $69/mo." },
+            { title: "Email-First", description: "Feedback lands in your inbox, not another dashboard." },
+            { title: "Zero Learning Curve", description: "If you can read email, you can use Feedinbox." },
+            { title: "Lighter Script", description: "Smaller widget for faster page loads." }
+        ],
+        keywords: ["usersnap alternative", "usersnap vs feedinbox", "cheaper than usersnap", "usersnap free alternative", "simple usersnap"]
+    },
+    {
+        slug: "userback",
+        competitorName: "Userback",
+        metaTitle: "Feedinbox vs Userback - Simpler Feedback Widget",
+        metaDescription: "Need a simpler Userback alternative? Feedinbox sends feedback straight to your email. No per-seat pricing, no complex setup.",
+        heroHeadline: "Userback alternative without per-seat pricing",
+        heroSubheadline: "Userback charges per seat. Feedinbox is one flat price for your whole team—starting at $5/mo.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard only" },
+            { feature: "Visual Annotations", feedinbox: "✗", competitor: "✓" },
+            { feature: "Per-Seat Pricing", feedinbox: "✗ Flat pricing", competitor: "✓ From $7/seat/mo" },
+            { feature: "Free Tier", feedinbox: "✓ 20 submissions/mo", competitor: "✓ Limited (7-day access)" },
+            { feature: "Session Replay", feedinbox: "✗", competitor: "✓ On Business plan" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "10+ minutes" }
+        ],
+        advantages: [
+            { title: "No Per-Seat Costs", description: "One flat price, share with your full team." },
+            { title: "Email Workflow", description: "No new dashboard to check—feedback hits your inbox." },
+            { title: "Truly Free Tier", description: "20 submissions/mo forever, not 7-day locked access." },
+            { title: "Simpler Setup", description: "One script tag vs complex SDK setup." }
+        ],
+        keywords: ["userback alternative", "userback vs feedinbox", "free userback alternative", "simpler than userback"]
+    },
+    {
+        slug: "sleekplan",
+        competitorName: "Sleekplan",
+        metaTitle: "Feedinbox vs Sleekplan - Email-First Feedback Alternative",
+        metaDescription: "Sleekplan has public roadmaps and voting. If you just need feedback in your inbox, Feedinbox is simpler and more affordable.",
+        heroHeadline: "Sleekplan alternative: feedback to inbox",
+        heroSubheadline: "Sleekplan is built for public roadmaps. If you just want feedback emailed to you, try something simpler.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard/portal" },
+            { feature: "Public Roadmap", feedinbox: "✗", competitor: "✓" },
+            { feature: "Voting System", feedinbox: "✗", competitor: "✓" },
+            { feature: "Changelog", feedinbox: "✗", competitor: "✓" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $13/mo" },
+            { feature: "Setup Complexity", feedinbox: "1 script tag", competitor: "Widget + portal setup" }
+        ],
+        advantages: [
+            { title: "Email-First", description: "Feedback in your inbox, not a portal you forget to check." },
+            { title: "Simpler Tool", description: "No roadmaps or changelogs to maintain—just feedback." },
+            { title: "Faster Setup", description: "One script tag. Done in 2 minutes." },
+            { title: "Lower Price", description: "Start at $5/mo vs $13/mo with fewer features to pay for." }
+        ],
+        keywords: ["sleekplan alternative", "sleekplan vs feedinbox", "simpler than sleekplan", "sleekplan email alternative"]
+    },
+    {
+        slug: "bugherd",
+        competitorName: "BugHerd",
+        metaTitle: "Feedinbox vs BugHerd - Lightweight Bug Feedback Alternative",
+        metaDescription: "BugHerd starts at $50/mo for visual bug tracking. Feedinbox collects bug reports and feedback to your inbox for $5/mo.",
+        heroHeadline: "BugHerd alternative for feedback collection",
+        heroSubheadline: "BugHerd is built for agencies and dev teams. If you need simple feedback collection, there's a 10x cheaper option.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard" },
+            { feature: "Visual Bug Pinning", feedinbox: "✗", competitor: "✓" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "15+ minutes" },
+            { feature: "Free Tier", feedinbox: "✓ 20 submissions/mo", competitor: "✗ 7-day trial only" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $50/mo" },
+            { feature: "Per-Seat Pricing", feedinbox: "✗ Flat pricing", competitor: "✓ Extra per member" }
+        ],
+        advantages: [
+            { title: "10x Cheaper", description: "$5/mo vs $50/mo for basic feedback needs." },
+            { title: "Not Just Bugs", description: "Collect bugs, feature requests, and general feedback." },
+            { title: "No Team Size Limits", description: "Flat pricing—no extra cost per team member." },
+            { title: "Works Everywhere", description: "Any website, not just sites in development." }
+        ],
+        keywords: ["bugherd alternative", "bugherd vs feedinbox", "cheaper than bugherd", "bugherd free alternative"]
+    },
+    {
+        slug: "marker-io",
+        competitorName: "Marker.io",
+        metaTitle: "Feedinbox vs Marker.io - Simple Feedback Alternative",
+        metaDescription: "Marker.io starts at $39/mo for visual feedback. Feedinbox collects all types of user feedback to your inbox for just $5/mo.",
+        heroHeadline: "Marker.io alternative for user feedback",
+        heroSubheadline: "Marker.io is built for QA teams. If you need simple user feedback, there's an 8x cheaper way.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard + integrations" },
+            { feature: "Screenshot Annotations", feedinbox: "✗", competitor: "✓" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "10+ minutes" },
+            { feature: "Free Tier", feedinbox: "✓ 20 submissions/mo", competitor: "Limited free plan" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $39/mo" },
+            { feature: "Target Users", feedinbox: "End users & visitors", competitor: "Internal QA teams" }
+        ],
+        advantages: [
+            { title: "8x Cheaper", description: "Collect feedback for $5/mo instead of $39/mo." },
+            { title: "User-Facing Widget", description: "Built for real users, not internal QA teams." },
+            { title: "Email Workflow", description: "Feedback in your inbox, no integrations needed." },
+            { title: "Simpler Scope", description: "Feedback collection without the QA toolchain." }
+        ],
+        keywords: ["marker.io alternative", "marker io alternative", "marker.io vs feedinbox", "cheaper than marker.io", "marker io free alternative"]
+    },
+    {
+        slug: "qualaroo",
+        competitorName: "Qualaroo",
+        metaTitle: "Feedinbox vs Qualaroo - Lightweight Feedback Alternative",
+        metaDescription: "Qualaroo is an AI-driven survey tool. If you just need user feedback sent to your email, Feedinbox is simpler and cheaper.",
+        heroHeadline: "Qualaroo alternative for quick feedback",
+        heroSubheadline: "Qualaroo is great for enterprise surveys. If you want simple feedback in your inbox, try Feedinbox.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard analytics" },
+            { feature: "AI Analysis", feedinbox: "✗", competitor: "✓ IBM Watson" },
+            { feature: "Survey Branching", feedinbox: "✗", competitor: "✓" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "30+ minutes" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $39.99/mo" },
+            { feature: "Learning Curve", feedinbox: "None", competitor: "Moderate" }
+        ],
+        advantages: [
+            { title: "8x Cheaper", description: "$5/mo vs $39.99/mo for basic feedback." },
+            { title: "Zero Complexity", description: "No survey branching to design—just a feedback widget." },
+            { title: "Instant Setup", description: "One script tag vs configuring survey nudges." },
+            { title: "Email Delivery", description: "Read feedback in your inbox, not a dashboard." }
+        ],
+        keywords: ["qualaroo alternative", "qualaroo vs feedinbox", "simple qualaroo alternative", "cheaper than qualaroo"]
+    },
+    {
+        slug: "survicate",
+        competitorName: "Survicate",
+        metaTitle: "Feedinbox vs Survicate - Affordable Feedback Alternative",
+        metaDescription: "Survicate starts at $99/mo for surveys. Feedinbox collects user feedback to your inbox for $5/mo. Simpler, faster, 20x cheaper.",
+        heroHeadline: "Survicate alternative for simple feedback",
+        heroSubheadline: "Survicate is a full survey platform. If you just need user feedback, Feedinbox does it for 20x less.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard" },
+            { feature: "NPS/CSAT Surveys", feedinbox: "✗", competitor: "✓" },
+            { feature: "Survey Templates", feedinbox: "✗", competitor: "✓ 125+ templates" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "20+ minutes" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $99/mo" },
+            { feature: "Free Tier", feedinbox: "✓ 20 submissions/mo", competitor: "✓ 25 responses/mo" }
+        ],
+        advantages: [
+            { title: "20x Cheaper", description: "$5/mo vs $99/mo for collecting feedback." },
+            { title: "Purpose-Built", description: "A feedback widget, not a survey platform." },
+            { title: "No Template Paralysis", description: "One widget, ready to go. No templates to choose from." },
+            { title: "Email-First", description: "Feedback in your inbox, not buried in analytics." }
+        ],
+        keywords: ["survicate alternative", "survicate vs feedinbox", "cheaper than survicate", "survicate free alternative"]
+    },
+    {
+        slug: "mopinion",
+        competitorName: "Mopinion",
+        metaTitle: "Feedinbox vs Mopinion - Budget-Friendly Feedback Alternative",
+        metaDescription: "Mopinion starts at $229/mo. Feedinbox delivers feedback to your inbox for $5/mo. Perfect for startups and small teams.",
+        heroHeadline: "Mopinion alternative for startups",
+        heroSubheadline: "Mopinion is built for enterprises with big budgets. Feedinbox is built for makers who want feedback in their inbox.",
+        comparison: [
+            { feature: "Feedback to Email", feedinbox: "✓ Instant delivery", competitor: "✗ Dashboard analytics" },
+            { feature: "Sentiment Analysis", feedinbox: "✗", competitor: "✓" },
+            { feature: "Multi-Channel", feedinbox: "Web widget", competitor: "Web, email, mobile" },
+            { feature: "Setup Time", feedinbox: "2 minutes", competitor: "Days to weeks" },
+            { feature: "Pricing", feedinbox: "From $5/mo", competitor: "From $229/mo" },
+            { feature: "Target Audience", feedinbox: "Startups & small teams", competitor: "Enterprise" }
+        ],
+        advantages: [
+            { title: "46x Cheaper", description: "$5/mo vs $229/mo. That's not a typo." },
+            { title: "Instant Setup", description: "One script tag, not an enterprise onboarding." },
+            { title: "Made for Makers", description: "Built for indie hackers and small teams." },
+            { title: "Email Simplicity", description: "No analytics dashboards—just feedback in your inbox." }
+        ],
+        keywords: ["mopinion alternative", "mopinion vs feedinbox", "affordable mopinion alternative", "cheaper than mopinion"]
     }
 ];
 

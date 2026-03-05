@@ -2,20 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, Package, FileCode } from "lucide-react";
+import { ArrowRight, Check, FileCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HeroSectionProps {
     isLoggedIn?: boolean;
 }
 
-type IntegrationMethod = "sdk" | "script";
-
 export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
     const [currentTextIndex, setCurrentTextIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
-    const [integrationMethod, setIntegrationMethod] = useState<IntegrationMethod>("script");
 
     const animatedTexts = ["feedback", "bug reports", "feature requests"];
 
@@ -47,12 +44,13 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 <div className="grid gap-16 lg:grid-cols-2 lg:gap-8 items-center">
                     <div className="max-w-2xl">
-                        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl lg:text-6xl mb-6">
-                            <span className="block">The fastest way to collect</span>
-                            <span className="block relative h-[1.2em] overflow-hidden">
+                        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 lg:text-6xl mb-6 leading-[1.1]">
+                            User{" "}
+                            <span className="inline-block relative overflow-hidden align-bottom" style={{ height: '1.15em' }}>
+                                <span className="invisible" aria-hidden="true">feature requests</span>
                                 <span
                                     className={cn(
-                                        "absolute left-0 transition-all duration-500 ease-out",
+                                        "absolute left-0 top-0 transition-all duration-500 ease-out whitespace-nowrap",
                                         isAnimating
                                             ? "opacity-0 -translate-y-full"
                                             : "opacity-100 translate-y-0",
@@ -64,7 +62,8 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                                     {animatedTexts[currentTextIndex]}
                                 </span>
                             </span>
-                            <span className="block">in your app.</span>
+                            <br />
+                            <span className="text-neutral-400">straight to your inbox.</span>
                         </h1>
                         <p className="text-lg text-neutral-600 mb-8 leading-relaxed">
                             Simply embed a snippet of code and start receiving bug reports, feature requests, and user thoughts directly to your mailbox and dashboard.
@@ -86,7 +85,7 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                                 </a>
                             )}
                             <code className="hidden sm:inline-flex h-10 items-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-4 text-sm font-mono text-neutral-600 whitespace-nowrap shrink-0">
-                                <span className="text-neutral-400">$</span> npm install feedinbox
+                                <FileCode className="h-4 w-4 text-neutral-400" /> Just a script tag
                             </code>
                         </div>
                         <div className="mt-10 flex items-center gap-4 text-sm text-neutral-500">
@@ -105,7 +104,7 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                     <div className="relative group w-full max-w-full min-w-0">
                         <div className="absolute -inset-4 rounded-2xl bg-gradient-to-tr from-neutral-100 to-neutral-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
                         <div className="relative rounded-xl border border-neutral-200 bg-white shadow-2xl shadow-neutral-200/50 overflow-hidden">
-                            {/* Integration Method Toggle */}
+                            {/* Header */}
                             <div className="flex items-center justify-between border-b border-neutral-100 bg-neutral-50/50 px-4 py-3">
                                 <div className="flex items-center gap-2">
                                     <div className="flex gap-1.5">
@@ -114,79 +113,23 @@ export default function HeroSection({ isLoggedIn = false }: HeroSectionProps) {
                                         <div className="h-3 w-3 rounded-full bg-green-400/80" />
                                     </div>
                                     <div className="ml-2 text-xs font-mono text-neutral-400">
-                                        {integrationMethod === "sdk" ? "layout.tsx" : "index.html"}
+                                        index.html
                                     </div>
                                 </div>
-                                {/* Toggle Buttons */}
-                                <div className="flex p-0.5 bg-neutral-200/80 rounded-md">
-                                    <button
-                                        onClick={() => setIntegrationMethod("sdk")}
-                                        className={cn(
-                                            "flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition-all",
-                                            integrationMethod === "sdk"
-                                                ? "bg-white text-neutral-900 shadow-sm"
-                                                : "text-neutral-500 hover:text-neutral-700"
-                                        )}
-                                    >
-                                        <Package className="h-3 w-3" />
-                                        SDK
-                                    </button>
-                                    <button
-                                        onClick={() => setIntegrationMethod("script")}
-                                        className={cn(
-                                            "flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition-all",
-                                            integrationMethod === "script"
-                                                ? "bg-white text-neutral-900 shadow-sm"
-                                                : "text-neutral-500 hover:text-neutral-700"
-                                        )}
-                                    >
-                                        <FileCode className="h-3 w-3" />
-                                        Script
-                                    </button>
+                                <div className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-neutral-500">
+                                    <FileCode className="h-3 w-3" />
+                                    Script
                                 </div>
                             </div>
                             <div className="p-6 overflow-x-auto bg-white">
                                 <pre className="text-sm font-mono leading-relaxed">
-                                    {integrationMethod === "sdk" ? (
-                                        <code className="language-tsx">
-                                            <span className="text-neutral-400">// npm install feedinbox</span>
-                                            <br />
-                                            <span className="text-purple-600">import</span> <span className="text-neutral-600">{`{`} Feedinbox {`}`}</span> <span className="text-purple-600">from</span> <span className="text-green-600">&apos;feedinbox&apos;</span><span className="text-neutral-600">;</span>
-                                            <br />
-                                            <br />
-                                            <span className="text-purple-600">export default function</span> <span className="text-blue-600">Layout</span><span className="text-neutral-600">() {`{`}</span>
-                                            <br />
-                                            <span className="text-neutral-600">  </span><span className="text-purple-600">return</span> <span className="text-neutral-600">(</span>
-                                            <br />
-                                            <span className="text-neutral-600">    </span><span className="text-purple-600">&lt;&gt;</span>
-                                            <br />
-                                            <span className="text-neutral-600">      {`{`}children{`}`}</span>
-                                            <br />
-                                            <span className="text-neutral-600">      </span><span className="text-purple-600">&lt;Feedinbox</span> <span className="text-neutral-600">projectKey=</span><span className="text-green-600">&quot;proj_xxx&quot;</span> <span className="text-purple-600">/&gt;</span>
-                                            <br />
-                                            <span className="text-neutral-600">    </span><span className="text-purple-600">&lt;/&gt;</span>
-                                            <br />
-                                            <span className="text-neutral-600">  );</span>
-                                            <br />
-                                            <span className="text-neutral-600">{`}`}</span>
-                                        </code>
-                                    ) : (
-                                        <code className="language-html">
-                                            <span className="text-neutral-400">&lt;!-- Add to &lt;body&gt; --&gt;</span>
-                                            <br />
-                                            <span className="text-purple-600">&lt;script&gt;</span>
-                                            <br />
-                                            <span className="text-neutral-600">  window.</span><span className="text-blue-600">feedinboxConfig</span> <span className="text-neutral-600">= {`{`}</span>
-                                            <br />
-                                            <span className="text-neutral-600">    projectKey:</span> <span className="text-green-600">&quot;proj_xxx&quot;</span>
-                                            <br />
-                                            <span className="text-neutral-600">  {`}`};</span>
-                                            <br />
-                                            <span className="text-purple-600">&lt;/script&gt;</span>
-                                            <br />
-                                            <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">async src=</span><span className="text-green-600">&quot;https://feedinbox.co/widget.js&quot;</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
-                                        </code>
-                                    )}
+                                    <code className="language-html">
+                                        <span className="text-neutral-400">&lt;!-- Add to &lt;body&gt; --&gt;</span>
+                                        <br />
+                                        <span className="text-purple-600">&lt;script</span> <span className="text-neutral-600">async src=</span><span className="text-green-600">&quot;https://feedinbox.co/widget.js&quot;</span>
+                                        <br />
+                                        <span className="text-neutral-600">  data-project-key=</span><span className="text-green-600">&quot;proj_xxx&quot;</span><span className="text-purple-600">&gt;&lt;/script&gt;</span>
+                                    </code>
                                 </pre>
                             </div>
                         </div>

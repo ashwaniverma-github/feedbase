@@ -151,7 +151,7 @@ export const features: Feature[] = [
         benefits: [
             {
                 title: "Developer Friendly",
-                description: "npm install or script tag. Your choice. Both take under 2 minutes."
+                description: "One script tag. Takes under 2 minutes."
             },
             {
                 title: "Founder Focused",

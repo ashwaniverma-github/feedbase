@@ -190,7 +190,20 @@
     // Expose init function
     window.feedinbox = { init: init };
 
-    // Auto-init for existing config
+    // Auto-init: check for data-project-key on the script tag first (single-tag mode)
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].src && scripts[i].src.indexOf('widget.js') !== -1) {
+            var projectKey = scripts[i].getAttribute('data-project-key');
+            if (projectKey) {
+                init({ projectKey: projectKey });
+                return;
+            }
+            break;
+        }
+    }
+
+    // Fallback: auto-init from window.feedinboxConfig (two-tag mode, backward compatible)
     var autoConfig = window.feedinboxConfig;
     if (autoConfig) {
         init(autoConfig);

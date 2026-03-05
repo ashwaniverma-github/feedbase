@@ -159,6 +159,78 @@ export const useCases: UseCase[] = [
             { title: "Team Visibility", description: "Share feedback access with your entire team." }
         ],
         keywords: ["product feedback", "product feedback tool", "feature request collection", "user feedback management"]
+    },
+    {
+        slug: "wordpress-feedback",
+        title: "Feedback for WordPress Sites",
+        metaTitle: "WordPress Feedback Widget | Feedinbox",
+        metaDescription: "Add a feedback widget to your WordPress site in 2 minutes. Collect visitor feedback and receive it in your email inbox. No plugin required.",
+        description: "Add a feedback widget to your WordPress site without installing a plugin. One script tag—that's it.",
+        icon: "Globe",
+        heroHeadline: "WordPress feedback, no plugin needed",
+        heroSubheadline: "Most WordPress feedback plugins are bloated. Feedinbox is just one script tag—paste it in your theme and start collecting feedback.",
+        problemStatement: "WordPress plugins add bloat, slow down your site, and create security risks. For simple feedback collection, you don't need another plugin.",
+        benefits: [
+            { title: "No Plugin Needed", description: "Just one script tag in your theme's footer. No plugin updates to worry about." },
+            { title: "Works with Any Theme", description: "Compatible with Elementor, Divi, GeneratePress, Astra—any WordPress theme." },
+            { title: "Lightweight", description: "No database queries or PHP processing. Just a client-side widget." },
+            { title: "Email Delivery", description: "Feedback goes straight to your inbox, not another WordPress admin page." }
+        ],
+        keywords: ["wordpress feedback widget", "wordpress feedback plugin", "wordpress feedback form", "wordpress user feedback", "wordpress feedback tool free"]
+    },
+    {
+        slug: "shopify-feedback",
+        title: "Feedback for Shopify Stores",
+        metaTitle: "Shopify Feedback Widget | Feedinbox",
+        metaDescription: "Collect customer feedback from your Shopify store. Understand shopper needs and fix checkout issues fast. Easy script tag setup.",
+        description: "Your Shopify customers want to tell you something. Give them a way to speak up—before they leave a bad review elsewhere.",
+        icon: "ShoppingCart",
+        heroHeadline: "Shopify customer feedback, simplified",
+        heroSubheadline: "Add a feedback widget to your Shopify store in 2 minutes. Understand what customers want—and what's stopping them from buying.",
+        problemStatement: "Shopify analytics tell you what customers do, but not why. Every abandoned cart has a story. Every return has a reason. You need to hear directly from your customers.",
+        benefits: [
+            { title: "Easy Shopify Setup", description: "Paste one script tag in your theme.liquid file. Done." },
+            { title: "Checkout Insights", description: "Understand why customers abandon carts or hesitate at checkout." },
+            { title: "Product Feedback", description: "Learn which products need better descriptions, sizing guides, or photos." },
+            { title: "Reduce Returns", description: "Fix confusion before it becomes a return or negative review." }
+        ],
+        keywords: ["shopify feedback widget", "shopify customer feedback", "shopify feedback app", "shopify store feedback", "shopify feedback form"]
+    },
+    {
+        slug: "agency-feedback",
+        title: "Feedback for Digital Agencies",
+        metaTitle: "Client Feedback Tool for Agencies | Feedinbox",
+        metaDescription: "Collect client feedback on websites during development. Simple script tag, no client training. Feedback goes straight to your inbox.",
+        description: "Agencies need client feedback without the back-and-forth. Give clients a simple way to share thoughts directly on the site.",
+        icon: "Users",
+        heroHeadline: "Client feedback without the chaos",
+        heroSubheadline: "Stop collecting feedback in email threads, Slack messages, and PDFs. Give clients one simple button on the site.",
+        problemStatement: "Client feedback gets scattered across email, Slack, WhatsApp, and Google Docs. You spend more time organizing feedback than acting on it.",
+        benefits: [
+            { title: "No Client Training", description: "Clients see a simple button. Click, type, submit. That's it." },
+            { title: "Email Delivery", description: "You receive feedback in your inbox. No new tools for your team." },
+            { title: "Multi-Project", description: "Each client project gets its own widget and feedback stream." },
+            { title: "Quick Setup", description: "Add to staging sites during development. Remove when done." }
+        ],
+        keywords: ["client feedback tool agency", "agency feedback collection", "client website feedback", "agency client communication tool"]
+    },
+    {
+        slug: "portfolio-feedback",
+        title: "Feedback for Portfolio Sites",
+        metaTitle: "Portfolio Website Feedback Widget | Feedinbox",
+        metaDescription: "Collect visitor feedback on your portfolio website. Understand what potential clients think of your work. Free to start.",
+        description: "Your portfolio speaks for you. Find out what visitors actually think—and what's stopping them from reaching out.",
+        icon: "Palette",
+        heroHeadline: "Portfolio feedback from real visitors",
+        heroSubheadline: "Your portfolio gets traffic but not enough inquiries? Understand why with a simple feedback widget.",
+        problemStatement: "Designers, developers, and freelancers spend hours perfecting their portfolio but never get direct feedback from visitors about what works and what doesn't.",
+        benefits: [
+            { title: "Visitor Insights", description: "Understand what potential clients think of your work." },
+            { title: "Improve Conversions", description: "Learn why visitors don't contact you—and fix it." },
+            { title: "Free to Start", description: "20 submissions/mo free. Perfect for personal sites." },
+            { title: "Non-Intrusive", description: "Small button that doesn't distract from your work." }
+        ],
+        keywords: ["portfolio feedback widget", "freelancer feedback tool", "portfolio website feedback", "designer portfolio feedback"]
     }
 ];
 

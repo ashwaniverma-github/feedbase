@@ -51,7 +51,7 @@ export default function IntegrationPage({ integration }: IntegrationPageProps) {
                 <div className="mx-auto max-w-4xl px-4 sm:px-6">
                     <div className="text-center mb-12">
                         <h2 className="text-2xl font-bold text-neutral-900 sm:text-3xl mb-4">
-                            {integration.installMethod === "npm" ? "Install via npm" : "Add to your site"}
+                            Add to your site
                         </h2>
                         <p className="text-neutral-600">
                             Copy and paste. That&apos;s the entire setup.
@@ -66,7 +66,7 @@ export default function IntegrationPage({ integration }: IntegrationPageProps) {
                                     <div className="h-3 w-3 rounded-full bg-green-400/80" />
                                 </div>
                                 <div className="ml-2 text-xs font-mono text-neutral-400">
-                                    {integration.installMethod === "npm" ? "Terminal" : "Your code"}
+                                    Your code
                                 </div>
                             </div>
                             <button className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors">

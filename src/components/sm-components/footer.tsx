@@ -7,18 +7,15 @@ export default function Footer() {
                 {/* SEO Links Row */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10 pb-10 border-b border-neutral-800">
                     <div>
-                        <h3 className="text-white font-medium mb-4">Features</h3>
-                        <ul className="space-y-2">
-                            <li><Link href="/features/feedback-to-email" className="hover:text-white transition-colors">Feedback to Email</Link></li>
-                            <li><Link href="/features/instant-email-alerts" className="hover:text-white transition-colors">Instant Alerts</Link></li>
-                            <li><Link href="/features" className="hover:text-white transition-colors">All Features →</Link></li>
-                        </ul>
-                    </div>
-                    <div>
                         <h3 className="text-white font-medium mb-4">Use Cases</h3>
                         <ul className="space-y-2">
                             <li><Link href="/use-cases/saas-feedback" className="hover:text-white transition-colors">SaaS</Link></li>
                             <li><Link href="/use-cases/startup-feedback" className="hover:text-white transition-colors">Startups</Link></li>
+                            <li><Link href="/use-cases/e-commerce-feedback" className="hover:text-white transition-colors">E-Commerce</Link></li>
+                            <li><Link href="/use-cases/wordpress-feedback" className="hover:text-white transition-colors">WordPress</Link></li>
+                            <li><Link href="/use-cases/shopify-feedback" className="hover:text-white transition-colors">Shopify</Link></li>
+                            <li><Link href="/use-cases/agency-feedback" className="hover:text-white transition-colors">Agencies</Link></li>
+                            <li><Link href="/use-cases/portfolio-feedback" className="hover:text-white transition-colors">Portfolios</Link></li>
                             <li><Link href="/use-cases" className="hover:text-white transition-colors">All Use Cases →</Link></li>
                         </ul>
                     </div>
@@ -27,6 +24,9 @@ export default function Footer() {
                         <ul className="space-y-2">
                             <li><Link href="/integrations/nextjs" className="hover:text-white transition-colors">Next.js</Link></li>
                             <li><Link href="/integrations/react" className="hover:text-white transition-colors">React</Link></li>
+                            <li><Link href="/integrations/wordpress" className="hover:text-white transition-colors">WordPress</Link></li>
+                            <li><Link href="/integrations/shopify" className="hover:text-white transition-colors">Shopify</Link></li>
+                            <li><Link href="/integrations/webflow" className="hover:text-white transition-colors">Webflow</Link></li>
                             <li><Link href="/integrations" className="hover:text-white transition-colors">All Integrations →</Link></li>
                         </ul>
                     </div>
@@ -35,7 +35,22 @@ export default function Footer() {
                         <ul className="space-y-2">
                             <li><Link href="/alternatives/canny" className="hover:text-white transition-colors">vs Canny</Link></li>
                             <li><Link href="/alternatives/hotjar" className="hover:text-white transition-colors">vs Hotjar</Link></li>
+                            <li><Link href="/alternatives/intercom" className="hover:text-white transition-colors">vs Intercom</Link></li>
+                            <li><Link href="/alternatives/usersnap" className="hover:text-white transition-colors">vs Usersnap</Link></li>
+                            <li><Link href="/alternatives/typeform" className="hover:text-white transition-colors">vs Typeform</Link></li>
+                            <li><Link href="/alternatives/survicate" className="hover:text-white transition-colors">vs Survicate</Link></li>
                             <li><Link href="/alternatives" className="hover:text-white transition-colors">All Comparisons →</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="text-white font-medium mb-4">Product</h3>
+                        <ul className="space-y-2">
+                            <li><Link href="/features" className="hover:text-white transition-colors">Features</Link></li>
+                            <li><Link href="/features/feedback-to-email" className="hover:text-white transition-colors">Feedback to Email</Link></li>
+                            <li><Link href="/features/instant-email-alerts" className="hover:text-white transition-colors">Instant Alerts</Link></li>
+                            <li><Link href="/#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                            <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
+                            <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
                         </ul>
                     </div>
                 </div>
