@@ -69,6 +69,7 @@ export default function OnboardingPage() {
     const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
     const [projectKey, setProjectKey] = useState("");
     const [error, setError] = useState("");
+    const [origin, setOrigin] = useState("");
 
     const [data, setData] = useState<OnboardingData>({
         useCase: "",
@@ -77,6 +78,11 @@ export default function OnboardingPage() {
         projectName: "",
         projectDomain: "",
     });
+
+    // Set origin on client mount to avoid hydration mismatch
+    useEffect(() => {
+        setOrigin(window.location.origin);
+    }, []);
 
     // Check if user already has projects
     useEffect(() => {
@@ -166,7 +172,6 @@ export default function OnboardingPage() {
     };
 
     const copyCode = () => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : '';
         navigator.clipboard.writeText(getEmbedCode(framework, projectKey, origin));
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -384,7 +389,7 @@ export default function OnboardingPage() {
                                         Paste this snippet before the closing <code className="text-xs bg-muted px-1.5 py-0.5 rounded">&lt;/body&gt;</code> tag on any page.
                                     </p>
                                     <CodeBlock
-                                        code={`<script async src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget.js" data-project-key="${projectKey}"></script>`}
+                                        code={getEmbedCode("html", projectKey, origin)}
                                         language="html"
                                         filename="Your website"
                                     />

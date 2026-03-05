@@ -28,8 +28,10 @@ export default function ProjectSettingsPage({
     const [domain, setDomain] = useState("");
     const [copied, setCopied] = useState(false);
     const [framework, setFramework] = useState<"nextjs" | "react" | "html">("nextjs");
+    const [origin, setOrigin] = useState("");
 
     useEffect(() => {
+        setOrigin(window.location.origin);
         fetchProject();
     }, [id]);
 
@@ -181,7 +183,7 @@ export default function ProjectSettingsPage({
                             code={getEmbedCode(
                                 framework,
                                 project?.widgetKey || "pk_xxx",
-                                typeof window !== 'undefined' ? window.location.origin : ''
+                                origin
                             )}
                             language={framework === "html" ? "html" : "typescript"}
                             filename={

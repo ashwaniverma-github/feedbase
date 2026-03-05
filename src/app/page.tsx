@@ -33,12 +33,6 @@ const jsonLd = {
       description: "Unlimited submissions",
     },
   ],
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    ratingCount: "50",
-    bestRating: "5",
-  },
 };
 
 export default function Home() {
